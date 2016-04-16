@@ -1,405 +1,417 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <dom-module id="snw-account-header-widget">
-    <style>
-        paper-button {
-            font-family: 'Roboto', 'Noto', sans-serif;
-            font-weight: normal;
-            font-style: normal;
-            font-variant: normal;
-            text-transform: none;
-        }
-        paper-button a {
-            text-decoration: none;
-            color: inherit;
-            text-transform: capitalize;
-        }
+  <style>
+    paper-button {
+      font-family: 'Roboto', 'Noto', sans-serif;
+      font-weight: normal;
+      font-style: normal;
+      font-variant: normal;
+      text-transform: none;
+    }
+    paper-button a {
+      text-decoration: none;
+      color: inherit;
+      text-transform: capitalize;
+    }
 
-        .snwdrop{
-            position: fixed;
-            margin-top: 52px;
-            right: 20px;
-            z-index: 2;
-            width: 200px;
-        }
-    </style>
+    .snwdrop{
+      position: fixed;
+      margin-top: 52px;
+      right: 20px;
+      z-index: 2;
+      width: 200px;
+    }
+  </style>
 
-    <template>
-        <snw-account-ls id="sals" account="{{account}}" jwt="{{jwt}}" on-iron-localstorage-load="loadStorage"></snw-account-ls>
+  <template>
+    <snw-account-ls id="sals" account="{{account}}" jwt="{{jwt}}" on-iron-localstorage-load="loadStorage"></snw-account-ls>
 
-        <!-- Toolbar buttons -->
-        <template is="dom-if" if="{{loggedIn}}">
-            <paper-button style="text-transform: capitalize" on-tap="showAccountDrop">{{account.userName}}</paper-button>
-            <snw-account-drop id="snwadrop" class="snwdrop"></snw-account-drop>
-            <paper-button on-tap="logout">Logout</paper-button>
-        </template>
-        <template is="dom-if" if="{{!loggedIn}}">
-            <paper-button data-dialog="login">Login</paper-button>
-            <paper-button data-dialog="register">Register</paper-button>
-        </template>
-
-        <!-- Login dialog -->
-        <paper-dialog style="width: 400px;" id="login" with-backdrop="true" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-            <h2>Login</h2>
-            <div class="buttons">
-                <paper-button data-dialog="register" on-tap="closeDialog">Don't have an account? Register</paper-button>
-            </div>
-
-            <div>
-                <!-- External providers -->
-                <google-signin id="gs"
-                               client-id="751967381809-og5g0ofk608dojddcn0ikovekfetughn.apps.googleusercontent.com"
-                               cookie-policy="none"
-                               on-google-signin-success="googleSigninSuccess"
-                ></google-signin>
-                <snw-ajax id="g" cmd="/auth/google" body="{{gBody}}" on-response="gResp" on-error="gErr"></snw-ajax>
-            </div>
-
-            <template is="dom-if" if="{{loginError}}" >
-                <span style="color: red">{{loginErrorMessage}}</span>
-            </template>
-
-            <form is="iron-form"
-                  id="login-form"
-                  method="post"
-                  action="http://localhost:443/auth/default"
-                  on-iron-form-response="handleLoginResponse"
-                  on-iron-form-error="handleLoginError">
-                <gold-email-input name="email"
-                                  label="Email"
-                                  auto-validate
-                                  required
-                                  error-message="A valid email is required!"
-                                  value="{{sEmail}}"
-                ></gold-email-input>
-                <paper-input name="pw"
-                             label="Password"
-                             type="password"
-                             auto-validate
-                             required
-                             min-length="6"
-                             max-length="255"
-                             value="{{sPw}}"
-                             error-message="Password is required! Min. 6 characters. Max. 255 Characters."
-                ></paper-input>
-                <div class="buttons">
-                    <paper-button data-form="login" on-tap="submitForm" autofocus>Submit</paper-button>
-                </div>
-            </form>
-
-            <div class="buttons">
-                <paper-button dialog-dismiss raised>Cancel</paper-button>
-            </div>
-        </paper-dialog>
-
-        <!-- Register dialog -->
-        <paper-dialog style="width: 400px;" id="register" with-backdrop="true" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-            <h2>Register</h2>
-            <div class="buttons">
-                <paper-button data-dialog="login" on-tap="closeDialog">Already have an account? Login</paper-button>
-            </div>
-
-            <template is="dom-if" if="{{registerError}}" >
-                <template is="dom-if" if="{{registerErrorEmail}}">
-                    <span style="color: red">Email already used</span>
-                </template>
-                <template is="dom-if" if="{{registerErrorUsername}}">
-                    <span style="color: red">Username already used</span>
-                </template>
-            </template>
-
-            <form is="iron-form"
-                  id="register-form"
-                  method="post"
-                  action="http://localhost:443/auth/default/r"
-                  on-iron-form-response="handleRegisterResponse"
-                  on-iron-form-error="handleRegisterError">
-
-                <paper-input name="userName"
-                             label="Username"
-                             value="{{sUsername}}"
-                             on-change="validateUsername"
-                             required
-                             minlength="4"
-                             maxlength="64"
-                             error-message="Username is required! Min. 4 characters. Max. 64 Characters."
-                ></paper-input>
-
-                <gold-email-input name="email"
-                                  label="Email"
-                                  auto-validate
-                                  on-change="validateEmail"
-                                  required
-                                  error-message="A valid email is required!"
-                                  value="{{sEmail}}"
-                ></gold-email-input>
-
-                <paper-input name="pw"
-                             label="Password"
-                             type="password"
-                             auto-validate
-                             required
-                             min-length="6"
-                             max-length="255"
-                             value="{{sPw}}"
-                             error-message="Password is required! Min. 6 characters. Max. 255 Characters."
-                ></paper-input>
-
-                <div class="buttons">
-                    <paper-button data-form="register" on-tap="submitForm" autofocus>Submit</paper-button>
-                </div>
-
-                <snw-ajax id="vu" cmd="/auth/v/u" body="{{uBody}}" on-response="handleVUResponse"></snw-ajax>
-                <snw-ajax id="ve" cmd="/auth/v/e" body="{{eBody}}" on-response="handleVEResponse"></snw-ajax>
-
-
-            </form>
-
-            <div class="buttons">
-                <paper-button dialog-dismiss raised>Cancel</paper-button>
-            </div>
-        </paper-dialog>
-
-        <!-- Welcome dialog -->
-        <paper-dialog id="welcome" with-backdrop="true" on-iron-overlay-opened="welcomeModalClose" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-            <h2>Welcome {{account.userName}}!</h2>
-            <div class="buttons">
-                <paper-button dialog-dismiss raised>Close</paper-button>
-            </div>
-        </paper-dialog>
-
-        <!-- Logout dialog -->
-        <paper-dialog id="logout" with-backdrop="true" on-iron-overlay-opened="logoutModalClose" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-            <snw-ajax id="logoutAjax" cmd="/auth/logout" on-response="handleLogout"></snw-ajax>
-            <h2>You have logged out!</h2>
-            <div class="buttons">
-                <paper-button dialog-dismiss raised>Close</paper-button>
-            </div>
-        </paper-dialog>
+    <!-- Toolbar buttons -->
+    <template is="dom-if" if="{{loggedIn}}">
+      <paper-button style="text-transform: capitalize" on-tap="showAccountDrop">{{account.userName}}</paper-button>
+      <snw-account-drop id="snwadrop" class="snwdrop"></snw-account-drop>
+      <paper-button on-tap="logout">Logout</paper-button>
+    </template>
+    <template is="dom-if" if="{{!loggedIn}}">
+      <paper-button data-dialog="login">Login</paper-button>
+      <paper-button data-dialog="register">Register</paper-button>
     </template>
 
-    <script>
-        (function () {
-            'use strict';
-            Polymer({
-                is: 'snw-account-header-widget',
-                listeners:{
-                    'tap': 'onTap'
-                },
+    <!-- Login dialog -->
+    <paper-dialog style="width: 400px;" id="login" with-backdrop="true" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2>Login</h2>
+      <div class="buttons">
+        <paper-button data-dialog="register" on-tap="closeDialog">Don't have an account? Register</paper-button>
+      </div>
 
-                ready: function () {
-                    this.bTimeouts = [];
-                },
+      <div>
+        <!-- External providers -->
+        <google-signin id="gs"
+                       client-id="751967381809-og5g0ofk608dojddcn0ikovekfetughn.apps.googleusercontent.com"
+                       cookie-policy="none"
+                       on-google-signin-success="googleSigninSuccess"
+        ></google-signin>
+        <snw-ajax id="g" cmd="/auth/google" body="{{gBody}}" on-response="gResp" on-error="gErr"></snw-ajax>
+      </div>
 
-                timeOut: function (t) {
-                    if(this.bTimeouts[t])
-                        return true;
+      <template is="dom-if" if="{{loginError}}" >
+        <span style="color: red">{{loginErrorMessage}}</span>
+      </template>
 
-                    this.bTimeouts[t] = true;
-                    var l = this;
-                    setTimeout(function () {
-                        l.bTimeouts[t] = false;
-                    }, 1000);
-                    return false;
-                },
+      <form is="iron-form"
+            id="login-form"
+            method="post"
+            action="http://localhost:443/auth/default"
+            on-iron-form-response="handleLoginResponse"
+            on-iron-form-error="handleLoginError">
+        <gold-email-input name="email"
+                          label="Email"
+                          auto-validate
+                          required
+                          error-message="A valid email is required!"
+                          value="{{sEmail}}"
+        ></gold-email-input>
+        <paper-input name="pw"
+                     label="Password"
+                     type="password"
+                     auto-validate
+                     required
+                     min-length="6"
+                     max-length="255"
+                     value="{{sPw}}"
+                     error-message="Password is required! Min. 6 characters. Max. 255 Characters."
+        ></paper-input>
+        <div class="buttons">
+          <paper-button data-form="login" on-tap="submitForm" autofocus>Submit</paper-button>
+        </div>
+      </form>
 
-                onTap: function (e) {
-                    var b = e.target;
+      <div class="buttons">
+        <paper-button dialog-dismiss raised>Cancel</paper-button>
+      </div>
+    </paper-dialog>
 
-                    while (!b.hasAttribute('data-dialog') && b !== document.body) {
-                        b = b.parentElement;
-                    }
+    <!-- Register dialog -->
+    <paper-dialog style="width: 400px;" id="register" with-backdrop="true" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2>Register</h2>
+      <div class="buttons">
+        <paper-button data-dialog="login" on-tap="closeDialog">Already have an account? Login</paper-button>
+      </div>
 
-                    if(!b.hasAttribute('data-dialog')){
-                        return;
-                    }
+      <template is="dom-if" if="{{registerError}}" >
+        <template is="dom-if" if="{{registerErrorEmail}}">
+          <span style="color: red">Email already used</span>
+        </template>
+        <template is="dom-if" if="{{registerErrorUsername}}">
+          <span style="color: red">Username already used</span>
+        </template>
+      </template>
 
-                    var id = b.getAttribute('data-dialog');
-                    var d = document.getElementById(id);
-                    if(d){
-                        d.open();
-                    }
-                },
+      <form is="iron-form"
+            id="register-form"
+            method="post"
+            action="http://localhost:443/auth/default/r"
+            on-iron-form-response="handleRegisterResponse"
+            on-iron-form-error="handleRegisterError">
 
-                submitForm: function (e) {
+        <paper-input name="userName"
+                     label="Username"
+                     value="{{sUsername}}"
+                     on-change="validateUsername"
+                     required
+                     minlength="4"
+                     maxlength="64"
+                     error-message="Username is required! Min. 4 characters. Max. 64 Characters."
+        ></paper-input>
 
-                    if(this.timeOut('submit'))
-                        return;
+        <gold-email-input name="email"
+                          label="Email"
+                          auto-validate
+                          on-change="validateEmail"
+                          required
+                          error-message="A valid email is required!"
+                          value="{{sEmail}}"
+        ></gold-email-input>
 
-                    this.loginError = false;
-                    this.registerError = false;
-                    var id = e.target;
-                    id = id.getAttribute('data-form');
-                    document.getElementById(id + '-form').submit();
-                },
+        <paper-input name="pw"
+                     label="Password"
+                     type="password"
+                     auto-validate
+                     required
+                     min-length="6"
+                     max-length="255"
+                     value="{{sPw}}"
+                     error-message="Password is required! Min. 6 characters. Max. 255 Characters."
+        ></paper-input>
 
-                welcomeModalClose: function (e) {
-                    setTimeout(function () {
-                        var d = e.target;
-                        d.close();
-                    }, 3000);
+        <div class="buttons">
+          <paper-button data-form="register" on-tap="submitForm" autofocus>Submit</paper-button>
+        </div>
 
-                    var l = this;
-                    setTimeout(function () {
-                        l.fire('iron-signal', {name: 'login', data:null});
-                    }, 1000);
-                },
+        <snw-ajax id="vu" cmd="/auth/v/u" body="{{uBody}}" on-response="handleVUResponse"></snw-ajax>
+        <snw-ajax id="ve" cmd="/auth/v/e" body="{{eBody}}" on-response="handleVEResponse"></snw-ajax>
 
-                handleLogout: function (e) {
-                    this.setAccountStatus(false);
-                    window.location = '/#/home';
-                    this.$.logout.open();
 
-                    var l = this;
-                    setTimeout(function () {
-                        l.fire('iron-signal', {name: 'logout', data:null});
-                    }, 1000);
-                },
+      </form>
 
-                logout: function () {
-                    if(this.jwt.length > 0 && !this.timeOut('logout'))
-                    {
-                        this.$.logoutAjax.generateRequest();
-                    }
-                },
+      <div class="buttons">
+        <paper-button dialog-dismiss raised>Cancel</paper-button>
+      </div>
+    </paper-dialog>
 
-                logoutModalClose: function (e) {
-                    setTimeout(function () {
-                        var d = e.target;
-                        d.close();
-                    }, 3000);
-                },
+    <!-- Welcome dialog -->
+    <paper-dialog id="welcome" with-backdrop="true" on-iron-overlay-opened="welcomeModalClose" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2>Welcome {{account.userName}}!</h2>
+      <div class="buttons">
+        <paper-button dialog-dismiss raised>Close</paper-button>
+      </div>
+    </paper-dialog>
 
-                setAccountStatus: function (status) {
-                    if(status){
-                        this.jwtParsed = this.$.sals.parseJwt(this.jwt);
-                        this.loggedIn = true;
-                    }else{
-                        this.account = {};
-                        this.jwt = "";
-                        this.jwtParsed = {};
-                        this.loggedIn = false;
-                    }
-                },
+    <!-- Logout dialog -->
+    <paper-dialog id="logout" with-backdrop="true" on-iron-overlay-opened="logoutModalClose" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <snw-ajax id="logoutAjax" cmd="/auth/logout" on-response="handleLogout"></snw-ajax>
+      <h2>You have logged out!</h2>
+      <div class="buttons">
+        <paper-button dialog-dismiss raised>Close</paper-button>
+      </div>
+    </paper-dialog>
+  </template>
 
-                handleLoginResponse: function (e) {
-                    this.account = e.detail.response.data.user;
-                    this.jwt = e.detail.response.data.jwt;
-                    this.setAccountStatus(true);
-                    document.getElementById('login').close();
-                    document.getElementById('welcome').open();
-                },
+  <script>
+    (function () {
+      'use strict';
+      Polymer({
+        is: 'snw-account-header-widget',
+        listeners:{
+          'tap': 'onTap'
+        },
 
-                handleLoginError: function (e) {
-                    var data = e.detail.request.xhr.response.data.reason;
+        properties:{
+          account: Object,
+          jwt: Object,
+          loggedIn: Boolean,
+          gBody: Object,
+          loginError: Boolean,
+          registerError: Boolean,
+          uBody: Object,
+          eBody: Object,
+          sUsername: String
+        },
 
-                    this.setLoginError(data.f, data.a == 'show');
-                },
+        ready: function () {
+          this.bTimeouts = [];
+        },
 
-                setLoginError: function (err, show) {
-                    this.loginErrorMessage = err;
+        timeOut: function (t) {
+          if(this.bTimeouts[t])
+            return true;
 
-                    this.loginError = show;
-                },
+          this.bTimeouts[t] = true;
+          var l = this;
+          setTimeout(function () {
+            l.bTimeouts[t] = false;
+          }, 1000);
+          return false;
+        },
 
-                handleRegisterResponse: function (e) {
-                    this.account = e.detail.response.data.user;
-                    this.jwt = e.detail.response.data.jwt.toString();
-                    this.setAccountStatus(true);
-                    document.getElementById('register').close();
-                    document.getElementById('welcome').open();
-                },
+        onTap: function (e) {
+          var b = e.target;
 
-                handleRegisterError: function (e) {
-                    this.registerError = true;
-                },
+          while (!b.hasAttribute('data-dialog') && b !== document.body) {
+            b = b.parentElement;
+          }
 
-                loadStorage: function () {
-                    this.setAccountStatus(this.$.sals.validateJwt(this.jwt));
-                },
+          if(!b.hasAttribute('data-dialog')){
+            return;
+          }
 
-                closeDialog: function (e) {
-                    var b = e.target;
-                    while (!b.hasAttribute('data-dialog') && b !== document.body) {
-                        b = b.parentElement;
-                    }
+          var id = b.getAttribute('data-dialog');
+          var d = document.getElementById(id);
+          if(d){
+            d.open();
+          }
+        },
 
-                    if(!b.hasAttribute('data-dialog')){
-                        return;
-                    }
+        submitForm: function (e) {
 
-                    var id = b.getAttribute('data-dialog');
+          if(this.timeOut('submit'))
+            return;
 
-                    var dial = 'login';
-                    if(id == 'register'){
-                        dial = 'login';
-                    }else if(id == 'login'){
-                        dial = 'register';
-                    }
+          this.loginError = false;
+          this.registerError = false;
+          var id = e.target;
+          id = id.getAttribute('data-form');
+          document.getElementById(id + '-form').submit();
+        },
 
-                    document.getElementById(dial).close();
-                },
+        welcomeModalClose: function (e) {
+          setTimeout(function () {
+            var d = e.target;
+            d.close();
+          }, 3000);
 
-                validateUsername: function () {
-                    this.uBody = {
-                        username: this.sUsername
-                    };
-                    this.$.vu.generateRequest();
-                },
+          var l = this;
+          setTimeout(function () {
+            l.fire('iron-signal', {name: 'login', data:null});
+          }, 1000);
+        },
 
-                handleVUResponse: function (e) {
-                    this.registerErrorUsername = !e.detail.detail.response.data.isValid;
-                    this.updateRegisterErrorStatus();
-                },
+        handleLogout: function (e) {
+          this.setAccountStatus(false);
+          window.location = '/#/home';
+          this.$.logout.open();
 
-                validateEmail: function () {
-                    this.eBody = {
-                        email: this.sEmail
-                    };
-                    this.$.ve.generateRequest();
-                },
+          var l = this;
+          setTimeout(function () {
+            l.fire('iron-signal', {name: 'logout', data:null});
+          }, 1000);
+        },
 
-                handleVEResponse: function (e) {
-                    this.registerErrorEmail = !e.detail.detail.response.data.isValid;
-                    this.updateRegisterErrorStatus();
-                },
+        logout: function () {
+          if(this.jwt.length > 0 && !this.timeOut('logout'))
+          {
+            this.$.logoutAjax.generateRequest();
+          }
+        },
 
-                updateRegisterErrorStatus: function () {
-                    this.registerError = this.registerErrorEmail || this.registerErrorUsername;
-                },
+        logoutModalClose: function (e) {
+          setTimeout(function () {
+            var d = e.target;
+            d.close();
+          }, 3000);
+        },
 
-                googleSigninSuccess: function (e) {
-                    var s = gapi.auth2.getAuthInstance().currentUser.get();
-                    var d = s.getAuthResponse().id_token;
-                    var p =s.getBasicProfile();
-                    this.gBody = {
-                        idToken: d
-                    };
-                    this.$.g.generateRequest();
-                },
+        setAccountStatus: function (status) {
+          if(status){
+            this.jwtParsed = this.$.sals.parseJwt(this.jwt);
+            this.loggedIn = true;
+          }else{
+            this.account = {};
+            this.jwt = "";
+            this.jwtParsed = {};
+            this.loggedIn = false;
+          }
+        },
 
-                gResp: function (e) {
-                    var data = e.detail.detail.response.data;
-                    this.account = data.user;
-                    this.jwt = data.jwt;
-                    this.setAccountStatus(true);
-                    this.$.gs.signOut();
+        handleLoginResponse: function (e) {
+          this.account = e.detail.response.data.user;
+          this.jwt = e.detail.response.data.jwt;
+          this.setAccountStatus(true);
+          document.getElementById('login').close();
+          document.getElementById('welcome').open();
+        },
 
-                    this.$.login.close();
-                    this.$.welcome.open();
-                },
+        handleLoginError: function (e) {
+          var data = e.detail.request.xhr.response.data.reason;
 
-                gErr: function (e) {
-                    this.$.gs.signOut();
-                    var data = e.detail.detail.request.xhr.response.data;
-                    this.setAccountStatus(false);
-                    this.setLoginError(data.reason.f, data.reason.a == 'show');
-                },
+          this.setLoginError(data.f, data.a == 'show');
+        },
 
-                showAccountDrop: function () {
-                    document.getElementById('snwadrop').open();
-                }
-            });
-        })();
-    </script>
+        setLoginError: function (err, show) {
+          this.loginErrorMessage = err;
+
+          this.loginError = show;
+        },
+
+        handleRegisterResponse: function (e) {
+          this.account = e.detail.response.data.user;
+          this.jwt = e.detail.response.data.jwt.toString();
+          this.setAccountStatus(true);
+          document.getElementById('register').close();
+          document.getElementById('welcome').open();
+        },
+
+        handleRegisterError: function (e) {
+          this.registerError = true;
+        },
+
+        loadStorage: function () {
+          this.setAccountStatus(this.$.sals.validateJwt(this.jwt));
+        },
+
+        closeDialog: function (e) {
+          var b = e.target;
+          while (!b.hasAttribute('data-dialog') && b !== document.body) {
+            b = b.parentElement;
+          }
+
+          if(!b.hasAttribute('data-dialog')){
+            return;
+          }
+
+          var id = b.getAttribute('data-dialog');
+
+          var dial = 'login';
+          if(id == 'register'){
+            dial = 'login';
+          }else if(id == 'login'){
+            dial = 'register';
+          }
+
+          document.getElementById(dial).close();
+        },
+
+        validateUsername: function () {
+          this.uBody = {
+            username: this.sUsername
+          };
+          this.$.vu.generateRequest();
+        },
+
+        handleVUResponse: function (e) {
+          this.registerErrorUsername = !e.detail.detail.response.data.isValid;
+          this.updateRegisterErrorStatus();
+        },
+
+        validateEmail: function () {
+          this.eBody = {
+            email: this.sEmail
+          };
+          this.$.ve.generateRequest();
+        },
+
+        handleVEResponse: function (e) {
+          this.registerErrorEmail = !e.detail.detail.response.data.isValid;
+          this.updateRegisterErrorStatus();
+        },
+
+        updateRegisterErrorStatus: function () {
+          this.registerError = this.registerErrorEmail || this.registerErrorUsername;
+        },
+
+        googleSigninSuccess: function (e) {
+          var s = gapi.auth2.getAuthInstance().currentUser.get();
+          var d = s.getAuthResponse().id_token;
+          var p =s.getBasicProfile();
+          this.gBody = {
+            idToken: d
+          };
+          this.$.g.generateRequest();
+        },
+
+        gResp: function (e) {
+          var data = e.detail.detail.response.data;
+          this.account = data.user;
+          this.jwt = data.jwt;
+          this.setAccountStatus(true);
+          this.$.gs.signOut();
+
+          this.$.login.close();
+          this.$.welcome.open();
+        },
+
+        gErr: function (e) {
+          this.$.gs.signOut();
+          var data = e.detail.detail.request.xhr.response.data;
+          this.setAccountStatus(false);
+          this.setLoginError(data.reason.f, data.reason.a == 'show');
+        },
+
+        showAccountDrop: function () {
+          document.getElementById('snwadrop').open();
+        }
+      });
+    })();
+  </script>
 </dom-module>

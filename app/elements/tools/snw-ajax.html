@@ -1,174 +1,180 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <dom-module id="snw-ajax">
-    <template>
-        <snw-account-ls id="accountls" jwt="{{jwt}}" on-iron-localstorage-load="storageLoaded"></snw-account-ls>
-        <iron-ajax id="snwajax"
-                   handle-as="json"
-                   headers="{{headers}}"
-                   url="{{url}}"
-                   method="{{method}}"
-                   auto="{{auto}}"
-                   debounce-duration="{{debounceDuration}}"
-                   body="{{body}}"
-                   content-type="{{contentType}}"
-                   on-response="handleResponse"
-                   on-error="handleError"
-                   last-response="{{lastResponse}}"
-                   last-error="{{lastError}}"
-                   last-request="{{lastRequest}}"
-        ></iron-ajax>
-    </template>
-    <script>
-        (function () {
-            'use strict';
-            Polymer({
-                is: 'snw-ajax',
+  <template>
+    <snw-account-ls id="accountls" jwt="{{jwt}}" on-iron-localstorage-load="storageLoaded"></snw-account-ls>
+    <iron-ajax id="snwajax"
+               handle-as="json"
+               headers="{{headers}}"
+               url="{{url}}"
+               method="{{method}}"
+               auto="{{auto}}"
+               debounce-duration="{{debounceDuration}}"
+               body="{{body}}"
+               content-type="{{contentType}}"
+               on-response="handleResponse"
+               on-error="handleError"
+               last-response="{{lastResponse}}"
+               last-error="{{lastError}}"
+               last-request="{{lastRequest}}"
+    ></iron-ajax>
+  </template>
+  <script>
+    (function () {
+      'use strict';
+      Polymer({
+        is: 'snw-ajax',
 
-                properties:{
-                    cmd:{
-                        type: String,
-                        notify: true,
-                        value: ''
-                    },
-                    body:{
-                        type: Object,
-                        notify: true,
-                        value: {}
-                    },
-                    method:{
-                        type: String,
-                        notify: true
-                    },
-                    headers:{
-                        type: Object,
-                        notify: true,
-                        value: {}
-                    },
-                    auto:{
-                        type: Boolean,
-                        notify: true,
-                        value: false
-                    },
-                    debounceDuration: {
-                        type: Number,
-                        notify: true
-                    },
-                    lastResponse:{
-                        type: Object,
-                        readOnly: true,
-                        notify: true
-                    },
-                    lastError:{
-                        type: Object,
-                        readOnly: true,
-                        notify: true
-                    },
-                    lastRequest:{
-                        type: Object,
-                        readOnly: true,
-                        notify: true
-                    },
-                    contentType:{
-                        type: String,
-                        notify: true
-                    }
-                },
+        properties:{
+          cmd:{
+            type: String,
+            notify: true,
+            value: ''
+          },
+          body:{
+            type: Object,
+            notify: true,
+            value: {}
+          },
+          method:{
+            type: String,
+            notify: true
+          },
+          headers:{
+            type: Object,
+            notify: true,
+            value: {}
+          },
+          auto:{
+            type: Boolean,
+            notify: true,
+            value: false
+          },
+          debounceDuration: {
+            type: Number,
+            notify: true
+          },
+          lastResponse:{
+            type: Object,
+            readOnly: true,
+            notify: true
+          },
+          lastError:{
+            type: Object,
+            readOnly: true,
+            notify: true
+          },
+          lastRequest:{
+            type: Object,
+            readOnly: true,
+            notify: true
+          },
+          contentType:{
+            type: String,
+            notify: true
+          },
+          jwt:{
+            type: Object
+          },
+          url:{
+            type: String
+          }
+        },
 
-                ready: function () {
-                    this.init();
-                },
+        ready: function () {
+          this.init();
+        },
 
-                init: function () {
-                    //Force localstorage reload before init.
-                    this.$.accountls.reload();
-                    this.setAuthHeader(this.jwt);
-                    this.setMethod(this.method || 'POST');
-                    this.setCmd(this.cmd || '');
-                    this.setUrl('http://localhost:443' + this.cmd);
-                    this.setHeaders(this.headers || {});
-                    this.setDebounceDuration(this.debounceDuration || 300);
-                    this.setAuto(this.auto || false);
-                    this.setBody(this.body|| {});
-                    this.setContentType(this.contentType || 'application/json');
-                },
+        init: function () {
+          //Force localstorage reload before init.
+          this.$.accountls.reload();
+          this.setAuthHeader(this.jwt);
+          this.setMethod(this.method || 'POST');
+          this.setCmd(this.cmd || '');
+          this.setUrl('http://localhost:443' + this.cmd);
+          this.setHeaders(this.headers || {});
+          this.setDebounceDuration(this.debounceDuration || 300);
+          this.setAuto(this.auto || false);
+          this.setBody(this.body|| {});
+          this.setContentType(this.contentType || 'application/json');
+        },
 
-                setHeaders: function (headers) {
-                    if(!headers ||headers == {})
-                        return;
+        setHeaders: function (headers) {
+          if(!headers ||headers == {})
+            return;
 
-                    if(!this.headers)
-                        this.headers = {};
+          if(!this.headers)
+            this.headers = {};
 
-                    var newHeaders = {};
-                    for(var key in headers){
-                        newHeaders[key] = headers[key];
-                    }
+          var newHeaders = {};
+          for(var key in headers){
+            newHeaders[key] = headers[key];
+          }
 
-                    this.headers = newHeaders;
-                },
+          this.headers = newHeaders;
+        },
 
-                setBody: function (body) {
-                    if(!body ||body == {})
-                        return;
+        setBody: function (body) {
+          if(!body ||body == {})
+            return;
 
-                    if(!this.body)
-                        this.body = {};
+          if(!this.body)
+            this.body = {};
 
-                    var newbody = {};
-                    for(var key in body){
-                        newbody[key] = body[key];
-                    }
+          var newbody = {};
+          for(var key in body){
+            newbody[key] = body[key];
+          }
 
-                    this.body = newbody;
-                },
+          this.body = newbody;
+        },
 
-                setContentType: function (type) {
-                  this.contentType = type;
-                },
+        setContentType: function (type) {
+          this.contentType = type;
+        },
 
-                setAuthHeader: function (jwt) {
-                    this.headers.authentication = jwt;
-                },
+        setAuthHeader: function (jwt) {
+          this.headers.authentication = jwt;
+        },
 
-                setUrl: function (url) {
-                    this.url = url;
-                },
+        setUrl: function (url) {
+          this.url = url;
+        },
 
-                setCmd: function (cmd) {
-                    this.cmd = cmd;
-                },
+        setCmd: function (cmd) {
+          this.cmd = cmd;
+        },
 
-                setMethod: function (method) {
-                    this.method = method;
-                },
+        setMethod: function (method) {
+          this.method = method;
+        },
 
-                setAuto: function (auto) {
-                    this.auto = auto;
-                },
+        setAuto: function (auto) {
+          this.auto = auto;
+        },
 
-                setDebounceDuration: function (dur) {
-                    this.debounceDuration = dur;
-                },
+        setDebounceDuration: function (dur) {
+          this.debounceDuration = dur;
+        },
 
-                storageLoaded: function () {
-                    this.setAuthHeader(this.jwt);
-                },
+        storageLoaded: function () {
+          this.setAuthHeader(this.jwt);
+        },
 
-                generateRequest: function () {
-                    this.init();
+        generateRequest: function () {
+          this.init();
 
-                    this.$.snwajax.generateRequest();
-                },
+          this.$.snwajax.generateRequest();
+        },
 
-                handleResponse: function (e, detail) {
-                    this.fire('response', e, detail);
-                },
+        handleResponse: function (e, detail) {
+          this.fire('response', e, detail);
+        },
 
-                handleError: function (e, detail) {
-                    this.fire('error', e, detail);
-                }
-            });
-        })();
-    </script>
+        handleError: function (e, detail) {
+          this.fire('error', e, detail);
+        }
+      });
+    })();
+  </script>
 </dom-module>

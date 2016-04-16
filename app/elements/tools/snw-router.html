@@ -3,9 +3,9 @@
 <dom-module id="snw-router">
   <template>
     <carbon-location route="{{route}}" use-Hash-As-Path></carbon-location>
-    <carbon-route route="{{route}}" pattern="/:page" data="{{pageData}}" tail="{{pageTail}}" active="{{pageActive}}"></carbon-route>
-    <carbon-route route="{{pageTail}}" pattern="/:id" data="{{tailData}}" tail="{{mTail}}" active="{{tailActive}}"></carbon-route>
-    <carbon-route route="{{mTail}}" pattern="/:m" data="{{mData}}" active="{{mActive}}"></carbon-route>
+    <carbon-route route="{{route}}" pattern="/:page" data="{{pageData}}" tail="{{pageTail}}"></carbon-route>
+    <carbon-route route="{{pageTail}}" pattern="/:id" data="{{tailData}}" tail="{{mTail}}"></carbon-route>
+    <carbon-route route="{{mTail}}" pattern="/:m" data="{{mData}}"></carbon-route>
 
 
     <snw-protected-route path="/user/*/settings" data="{{data}}" redirect="true" scopes="{{userSettingsScopes}}"></snw-protected-route>
@@ -28,11 +28,17 @@
             type: Object,
             notify: true,
             observer: 'dataChanged'
-          }
+          },
+
+          pageData: Object,
+          tailData: Object,
+          mData: Object,
+          userSettingsScopes: Array,
+          userInboxScopes: Array
         },
 
         observers:[
-            'test(route, data)'
+          'test(route, data)'
         ],
 
         ready:function () {
@@ -55,7 +61,6 @@
         test: function (route, data) {
 //          console.log(route);
 //          console.log(data);
-//          console.log('page: ' + this.pageActive + ' tail: ' + this.tailActive + ' m: ' + this.mActive);
         },
 
         dataChanged: function (e) {

@@ -33,6 +33,7 @@
   },
   "scripts": {
     "test": "gulp test:local",
-    "start": "gulp serve"
+    "start": "gulp serve",
+    "polylint": "polylint --root app/ --input index.html"
   }
 }

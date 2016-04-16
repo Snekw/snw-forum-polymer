@@ -2,77 +2,81 @@
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
 
 <dom-module id="snw-account-drop">
-    <style>
-        paper-dialog {
-            position: fixed;
-            right: 10px;
-            top: 49px;
-            margin:0;
-            width: 200px;
+  <style>
+    paper-dialog {
+      position: fixed;
+      right: 10px;
+      top: 49px;
+      margin:0;
+      width: 200px;
+    }
+
+    paper-dialog paper-listbox {
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+    }
+    paper-listbox paper-item:hover{
+      background-color: #f0f0f0;
+    }
+
+    paper-item a{
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .iron-selected{
+      font-weight: normal;
+    }
+  </style>
+
+  <template>
+    <snw-account-ls id="sals" account="{{account}}"></snw-account-ls>
+    <paper-dialog id="adrop"
+                  entry-animation="snw-account-drop-entry-animation"
+                  exit-animation="snw-account-drop-exit-animation"
+    >
+      <paper-listbox style="height: 192px">
+        <paper-item on-tap="settings">Settings</paper-item>
+        <paper-item on-tap="profile">Profile</paper-item>
+        <paper-item on-tap="friends">Friends</paper-item>
+        <paper-item on-tap="inbox">Inbox</paper-item>
+      </paper-listbox>
+    </paper-dialog>
+  </template>
+
+  <script>
+    (function () {
+      'use strict';
+      Polymer({
+        is: 'snw-account-drop',
+
+        properties:{
+          account: Object
+        },
+
+        open: function () {
+          this.$.sals.reload();
+          this.$.adrop.open();
+        },
+
+        settings: function () {
+          window.location='/#/user/' + this.account.profileShortId + '/settings';
+          this.$.adrop.close();
+        },
+        profile: function () {
+          window.location='/#/user/' + this.account.profileShortId + '/profile';
+          this.$.adrop.close();
+        },
+        friends: function () {
+          window.location='/#/user/' + this.account.profileShortId + '/friends';
+          this.$.adrop.close();
+        },
+        inbox: function () {
+          window.location='/#/user/' + this.account.profileShortId + '/inbox';
+          this.$.adrop.close();
         }
-
-        paper-dialog paper-listbox {
-            padding: 0;
-            margin: 0;
-            cursor: pointer;
-        }
-        paper-listbox paper-item:hover{
-            background-color: #f0f0f0;
-        }
-
-        paper-item a{
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .iron-selected{
-            font-weight: normal;
-        }
-    </style>
-
-    <template>
-        <snw-account-ls id="sals" account="{{account}}"></snw-account-ls>
-        <paper-dialog id="adrop"
-                      entry-animation="snw-account-drop-entry-animation"
-                      exit-animation="snw-account-drop-exit-animation"
-        >
-            <paper-listbox style="height: 192px">
-                <paper-item on-tap="settings">Settings</paper-item>
-                <paper-item on-tap="profile">Profile</paper-item>
-                <paper-item on-tap="friends">Friends</paper-item>
-                <paper-item on-tap="inbox">Inbox</paper-item>
-            </paper-listbox>
-        </paper-dialog>
-    </template>
-
-    <script>
-        (function () {
-            'use strict';
-            Polymer({
-                is: 'snw-account-drop',
-
-                open: function () {
-                    this.$.sals.reload();
-                    this.$.adrop.open();
-                },
-
-                settings: function () {
-                    window.location='/#/user/' + this.account.profileShortId + '/settings';
-                    this.$.adrop.close();
-                },
-                profile: function () {
-                    window.location='/#/user/' + this.account.profileShortId + '/profile';
-                    this.$.adrop.close();
-                },
-                friends: function () {
-                    window.location='/#/user/' + this.account.profileShortId + '/friends';
-                    this.$.adrop.close();
-                },
-                inbox: function () {
-                    window.location='/#/user/' + this.account.profileShortId + '/inbox';
-                    this.$.adrop.close();
-                }
-            });
-        })();
-    </script>
+      });
+    })();
+  </script>
 </dom-module>
