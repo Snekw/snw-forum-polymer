@@ -1,0 +1,49 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+
+<dom-module id="snw-toast">
+
+  <style>
+    .toastIsError {
+      color: #ff2120;
+    }
+
+    .hide {
+      display: none;
+    }
+
+    span {
+      float: right;
+      color: whitesmoke;
+      margin-left: 10px;
+    }
+  </style>
+
+  <template>
+    <paper-toast id="toast" duration="5000">
+      <span id="bok" class="toast-hide-button" role="button" tabindex="0" on-tap="hide">Ok</span>
+    </paper-toast>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'snw-toast',
+
+        hide: function () {
+          this.$.toast.hide();
+        },
+
+        show: function (text, isError) {
+          isError = isError || false;
+          text = text || 'uninitialized text';
+
+          this.$.toast.toggleClass('toastIsError', isError);
+
+          this.$.toast.show(text);
+        }
+      });
+    })();
+  </script>
+</dom-module>

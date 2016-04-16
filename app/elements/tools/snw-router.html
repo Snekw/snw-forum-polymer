@@ -1,0 +1,86 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+
+<dom-module id="snw-router">
+  <template>
+    <carbon-location route="{{route}}" use-Hash-As-Path></carbon-location>
+    <carbon-route route="{{route}}" pattern="/:page" data="{{pageData}}" tail="{{pageTail}}" active="{{pageActive}}"></carbon-route>
+    <carbon-route route="{{pageTail}}" pattern="/:id" data="{{tailData}}" tail="{{mTail}}" active="{{tailActive}}"></carbon-route>
+    <carbon-route route="{{mTail}}" pattern="/:m" data="{{mData}}" active="{{mActive}}"></carbon-route>
+
+
+    <snw-protected-route path="/user/*/settings" data="{{data}}" redirect="true" scopes="{{userSettingsScopes}}"></snw-protected-route>
+    <snw-protected-route path="/user/*/inbox" data="{{data}}" redirect="true" scopes="{{userInboxScopes}}"></snw-protected-route>
+  </template>
+
+  <script>
+    (function () {
+      'use strict';
+      Polymer({
+        is: 'snw-router',
+
+        properties:{
+          route:{
+            type: Object,
+            notify: true,
+            observer: 'routeChanged'
+          },
+          data:{
+            type: Object,
+            notify: true,
+            observer: 'dataChanged'
+          }
+        },
+
+        observers:[
+            'test(route, data)'
+        ],
+
+        ready:function () {
+          this.userSettingsScopes = ['t:t'];
+          this.userInboxScopes = ['t:t'];
+        },
+
+        attached: function () {
+//          this.handle();
+        },
+
+        routeChanged: function () {
+          console.log('data change');
+          console.log(this.route);
+          console.log(this.data);
+          this.handle();
+          console.log(this.data);
+        },
+
+        test: function (route, data) {
+//          console.log(route);
+//          console.log(data);
+//          console.log('page: ' + this.pageActive + ' tail: ' + this.tailActive + ' m: ' + this.mActive);
+        },
+
+        dataChanged: function (e) {
+        },
+
+        handle: function () {
+
+          var d = {};
+          d.page = this.pageData.page || null;
+
+          if(this.tailData){
+            d.id = this.tailData.id;
+          }else{
+            d.id = null;
+          }
+
+          if(this.mData){
+            d.modifier = this.mData.m;
+          }else{
+            d.modifier = null;
+          }
+          this.data = d;
+        }
+      });
+    })();
+  </script>
+</dom-module>

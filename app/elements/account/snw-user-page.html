@@ -1,0 +1,64 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+
+<dom-module id="snw-user-page">
+
+  <style>
+    paper-material {
+      border-radius: 2px;
+      height: 100%;
+      padding: 16px 0 16px 0;
+      width: calc(98.66% - 16px);
+      margin: 16px auto;
+      background: white;
+    }
+  </style>
+
+  <template>
+    <template is="dom-if" if="{{profile}}">
+      <paper-material elevation="1">profile</paper-material>
+    </template>
+    <template is="dom-if" if="{{settings}}">
+      <paper-material elevation="1">settings</paper-material>
+    </template>
+    <template is="dom-if" if="{{friends}}">
+      <paper-material elevation="1">friends</paper-material>
+    </template>
+    <template is="dom-if" if="{{inbox}}">
+      <paper-material elevation="1">inbox</paper-material>
+    </template>
+  </template>
+
+  <script>
+    (function () {
+      'use strict';
+      Polymer({
+        is: 'snw-user-page',
+
+        properties:{
+          rData:{
+            type: Object,
+            notify: true,
+            observer: 'rDataChanged'
+          }
+        },
+
+        ready: function () {
+          this.sScopes = ['t:t', 't:t'];
+        },
+
+        //Update the user page
+        rDataChanged: function (e) {
+          this.selectPage(this.rData.modifier);
+        },
+
+        selectPage: function (p) {
+          this.profile = p == 'profile';
+          this.settings = p == 'settings';
+          this.inbox = p == 'inbox';
+          this.friends = p == 'friends';
+        }
+      });
+    })();
+  </script>
+</dom-module>

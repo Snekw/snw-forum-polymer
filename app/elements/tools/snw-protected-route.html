@@ -1,0 +1,147 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+
+<dom-module id="snw-protected-route">
+  <template>
+    <snw-account-ls id="sals" jwt="{{jwt}}"></snw-account-ls>
+    <iron-signals on-iron-signal-login="iron" on-iron-signal-logout="iron"></iron-signals>
+    <carbon-route-converter path="{{nPath}}" route="{{route}}"></carbon-route-converter>
+    <carbon-route route="{{route}}" pattern="/:page" data="{{pageData}}" tail="{{pageTail}}"></carbon-route>
+    <carbon-route route="{{pageTail}}" pattern="/:id" data="{{tailData}}" tail="{{mTail}}"></carbon-route>
+    <carbon-route route="{{mTail}}" pattern="/:m" data="{{mData}}"></carbon-route>
+
+    <snw-toast id="stoast"></snw-toast>
+  </template>
+
+  <script>
+    (function () {
+      'use strict';
+      Polymer({
+        is: 'snw-protected-route',
+
+        properties:{
+          scopes:{
+            type: Array,
+            notify: true,
+            value: function() {
+              return {};
+            }
+          },
+          redirect:{
+            type: Boolean
+          },
+          data:{
+            type: Object,
+            notify: true,
+            observer: 'routeDataChanged'
+          },
+          path:{
+            type: String,
+            notify: true
+          }
+        },
+
+        ready: function () {
+          this.allowed = false;
+          this.checkScopes();
+          
+          //Build the path we are going to be comparing the current path
+          this.buildPath(this.path);
+        },
+
+        iron: function () {
+          this.checkAccess();
+        },
+
+        doRedirect: function () {
+          window.location = '/#/home';
+        },
+
+        routeDataChanged: function () {
+          this.checkAccess();
+        },
+
+        checkAccess: function () {
+          if(!this.checkPath()){
+            return;
+          }
+
+          if(this.checkScopes()){
+            return;
+          }
+
+          this.$.stoast.show('No permissions to access ' + window.location, true);
+          if(this.redirect){
+            var l = this;
+            setTimeout(function () {
+              l.doRedirect();
+            }, 100);
+          }
+        },
+
+        //Only require one scope to be true
+        checkScopes: function () {
+          this.$.sals.reload();
+          if(this.$.sals.validateJwt(this.jwt)){
+            var decoded = this.$.sals.parseJwt(this.jwt);
+
+            for(var i = 0; i < this.scopes.length; i++){
+              for(var d = 0; i < decoded.scopes.length; d++){
+                if(decoded.scopes[d].field == this.scopes[i]){
+                  return true;
+                }
+              }
+
+              for(var x = 0; x < decoded.groups.length; x++){
+                for(var c = 0; c < decoded.groups[x].scopes.length; c++){
+                  if(decoded.groups[x].scopes[c].field == this.scopes[i]){
+                    return true;
+                  }
+                }
+              }
+
+            }
+          }else{
+            return false;
+          }
+        },
+
+        buildPath: function (path) {
+          this.nPath = path;
+          console.log(this.route);
+
+          var d = {};
+          d.page = this.pageData.page || null;
+
+          if(this.tailData){
+            d.id = this.tailData.id;
+          }else{
+            d.id = null;
+          }
+
+          if(this.mData){
+            d.modifier = this.mData.m;
+          }else{
+            d.modifier = null;
+          }
+          this.bPath = d;
+        },
+        
+        checkPath: function () {
+          if(!this.bPath){
+            return false;
+          }
+
+          if(this.bPath.page == this.data.page || this.bPath.page == '*'){
+            if(this.bPath.id == this.data.id || this.bPath.id == '*'){
+              if(this.bPath.modifier == this.data.modifier || this.bPath.modifier == '*'){
+                return true;
+              }
+            }
+          }
+          return false;
+        }
+      });
+    })();
+  </script>
+</dom-module>

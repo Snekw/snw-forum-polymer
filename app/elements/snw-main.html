@@ -1,0 +1,75 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+
+<dom-module id="snw-main">
+  <template>
+    <!-- Routing -->
+    <!--<carbon-location route="{{route}}" use-Hash-As-Path></carbon-location>-->
+    <snw-router data="{{routeData}}"></snw-router>
+
+    <paper-header-panel mode="standard">
+      <paper-toolbar id="mainToolbar">
+        <div class="flex title">Snw-Forum</div>
+        <!--<paper-icon-button icon="search"></paper-icon-button>-->
+        <!--<paper-icon-button icon="more-vert"></paper-icon-button>-->
+        <snw-account-header-widget></snw-account-header-widget>
+
+      </paper-toolbar>
+      <paper-tabs selected="{{routeData.page}}" attr-for-selected="key" on-iron-select="onTabSelect">
+        <paper-tab key="home">Home</paper-tab>
+        <paper-tab key="about">About Us</paper-tab>
+        <paper-tab key="forum">Forum</paper-tab>
+        <paper-tab key="servers">Servers</paper-tab>
+      </paper-tabs>
+    </paper-header-panel>
+
+    <div class="content">
+
+      <neon-animated-pages attr-for-selected="key"
+                           selected="{{routeData.page}}"
+                           entry-animation="slide-from-left-animation"
+                           exit-animation="slide-left-animation">
+
+        <!-- /home -->
+        <neon-animatable key="home">
+          <paper-material elevation="1" tabindex="-1" >Home <a href="/#/user/SJYvAYR/settings">Shortcut to victory</a> </paper-material>
+        </neon-animatable>
+
+        <!-- /about -->
+        <neon-animatable key="about">
+          <paper-material elevation="1" tabindex="-1">About</paper-material>
+        </neon-animatable>
+
+        <!-- /forum -->
+        <neon-animatable key="forum">
+          <paper-material elevation="1" tabindex="-1">Forum</paper-material>
+        </neon-animatable>
+
+        <!-- /servers -->
+        <neon-animatable key="servers">
+          <paper-material elevation="1" tabindex="-1">Servers</paper-material>
+        </neon-animatable>
+
+        <!-- /user -->
+        <neon-animatable key="user">
+          <snw-user-page r-data="{{routeData}}"></snw-user-page>
+        </neon-animatable>
+
+      </neon-animated-pages>
+    </div>
+
+  </template>
+
+  <script>
+    (function () {
+      'use strict';
+      Polymer({
+        is: 'snw-main',
+
+        onTabSelect: function (e) {
+          window.location = '/#/' + e.detail.item.getAttribute('key');
+        }
+      });
+    })();
+  </script>
+</dom-module>
