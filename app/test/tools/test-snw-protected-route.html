@@ -1,0 +1,37 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+
+  <!-- Elements to test-->
+  <link rel="import" href="../../elements/elements.html">
+  <link rel="import" href="../../elements/tools/snw-protected-route.html">
+</head>
+<body>
+
+<!-- You can use the document as a place to set up your fixtures. -->
+<test-fixture id="snw-protected-route-fixture">
+  <template>
+    <snw-protected-route></snw-protected-route>
+  </template>
+</test-fixture>
+
+<script>
+  suite('<snw-protected-route>', function () {
+    var myEl;
+    setup(function () {
+      myEl = fixture('snw-protected-route-fixture');
+    });
+
+    test('Path should get build', function () {
+      var path = '/user/*/settings';
+
+    });
+  });
+</script>
+
+</body>
+</html>

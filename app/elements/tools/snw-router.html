@@ -26,10 +26,8 @@
           },
           data:{
             type: Object,
-            notify: true,
-            observer: 'dataChanged'
+            notify: true
           },
-
           pageData: Object,
           tailData: Object,
           mData: Object,
@@ -37,38 +35,25 @@
           userInboxScopes: Array
         },
 
-        observers:[
-          'test(route, data)'
-        ],
-
         ready:function () {
           this.userSettingsScopes = ['t:t'];
           this.userInboxScopes = ['t:t'];
         },
 
-        attached: function () {
-//          this.handle();
-        },
-
         routeChanged: function () {
-          console.log('data change');
-          console.log(this.route);
-          console.log(this.data);
           this.handle();
-          console.log(this.data);
-        },
-
-        test: function (route, data) {
-//          console.log(route);
-//          console.log(data);
-        },
-
-        dataChanged: function (e) {
         },
 
         handle: function () {
 
           var d = {};
+
+          if(!this.pageData || this.pageData.page == ''){
+            //Redirect to home
+            window.location = '/#/home';
+            return;
+          }
+
           d.page = this.pageData.page || null;
 
           if(this.tailData){

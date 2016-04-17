@@ -6,21 +6,21 @@
     <!--<carbon-location route="{{route}}" use-Hash-As-Path></carbon-location>-->
     <snw-router data="{{routeData}}"></snw-router>
 
-    <paper-header-panel mode="standard">
+    <paper-header-panel mode="fixed">
       <paper-toolbar id="mainToolbar">
         <div class="flex title">Snw-Forum</div>
         <!--<paper-icon-button icon="search"></paper-icon-button>-->
         <!--<paper-icon-button icon="more-vert"></paper-icon-button>-->
         <snw-account-header-widget></snw-account-header-widget>
-
       </paper-toolbar>
-      <paper-tabs selected="{{routeData.page}}" attr-for-selected="key" on-iron-select="onTabSelect">
-        <paper-tab key="home">Home</paper-tab>
-        <paper-tab key="about">About Us</paper-tab>
-        <paper-tab key="forum">Forum</paper-tab>
-        <paper-tab key="servers">Servers</paper-tab>
-      </paper-tabs>
     </paper-header-panel>
+
+    <paper-tabs selected="{{routeData.page}}" attr-for-selected="key" on-iron-select="onTabSelect">
+      <paper-tab key="home">Home</paper-tab>
+      <paper-tab key="about">About Us</paper-tab>
+      <paper-tab key="forum">Forum</paper-tab>
+      <paper-tab key="servers">Servers</paper-tab>
+    </paper-tabs>
 
     <div class="content">
 

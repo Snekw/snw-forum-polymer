@@ -21,10 +21,7 @@
         properties:{
           scopes:{
             type: Array,
-            notify: true,
-            value: function() {
-              return {};
-            }
+            notify: true
           },
           redirect:{
             type: Boolean
@@ -47,11 +44,9 @@
         },
 
         ready: function () {
-          this.allowed = false;
-          this.checkScopes();
-          
+          this.scopes = this.scopes || [];
           //Build the path we are going to be comparing the current path
-          this.buildPath(this.path);
+          this.bPath = this.buildPath(this.path);
         },
 
         iron: function () {
@@ -64,14 +59,17 @@
 
         routeDataChanged: function () {
           this.checkAccess();
+          console.log(this.route);
+          console.log(this.data);
         },
 
         checkAccess: function () {
-          if(!this.checkPath()){
+          if(!this.checkPath(this.data, this.bPath)){
             return;
           }
 
-          if(this.checkScopes()){
+          this.$.sals.reload();
+          if(this.checkScopes(this.scopes, this.jwt)){
             return;
           }
 
@@ -84,22 +82,29 @@
           }
         },
 
-        //Only require one scope to be true
-        checkScopes: function () {
-          this.$.sals.reload();
-          if(this.$.sals.validateJwt(this.jwt)){
-            var decoded = this.$.sals.parseJwt(this.jwt);
+        checkJwt: function (jwt) {
+          return this.$.sals.validateJwt(jwt);
+        },
 
-            for(var i = 0; i < this.scopes.length; i++){
+        decodeJwt: function (jwt) {
+          return this.$.sals.parseJwt(jwt);
+        },
+
+        //Only require one scope to be true
+        checkScopes: function (scopes, jwt) {
+          if(this.checkJwt(jwt)){
+            var decoded = this.decodeJwt(jwt);
+
+            for(var i = 0; i < scopes.length; i++){
               for(var d = 0; i < decoded.scopes.length; d++){
-                if(decoded.scopes[d].field == this.scopes[i]){
+                if(decoded.scopes[d].field == scopes[i]){
                   return true;
                 }
               }
 
               for(var x = 0; x < decoded.groups.length; x++){
                 for(var c = 0; c < decoded.groups[x].scopes.length; c++){
-                  if(decoded.groups[x].scopes[c].field == this.scopes[i]){
+                  if(decoded.groups[x].scopes[c].field == scopes[i]){
                     return true;
                   }
                 }
@@ -113,7 +118,7 @@
 
         buildPath: function (path) {
           this.nPath = path;
-          console.log(this.route);
+//          console.log(this.route);
 
           var d = {};
           d.page = this.pageData.page || null;
@@ -129,17 +134,17 @@
           }else{
             d.modifier = null;
           }
-          this.bPath = d;
+          return d;
         },
         
-        checkPath: function () {
-          if(!this.bPath){
+        checkPath: function (data, bPath) {
+          if(!bPath || !data){
             return false;
           }
 
-          if(this.bPath.page == this.data.page || this.bPath.page == '*'){
-            if(this.bPath.id == this.data.id || this.bPath.id == '*'){
-              if(this.bPath.modifier == this.data.modifier || this.bPath.modifier == '*'){
+          if(bPath.page == data.page || bPath.page == '*'){
+            if(bPath.id == data.id || bPath.id == '*'){
+              if(bPath.modifier == data.modifier || bPath.modifier == '*'){
                 return true;
               }
             }

@@ -33,6 +33,7 @@
   },
   "scripts": {
     "test": "gulp test:local",
+    "wct": "wct --skip-plugin sauce -p",
     "start": "gulp serve",
     "polylint": "polylint --root app/ --input index.html"
   }
