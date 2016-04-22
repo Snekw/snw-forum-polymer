@@ -2,13 +2,61 @@
 
 <dom-module id="snw-login">
   <template>
+    <snw-jwt-helper id="jwtHelper"></snw-jwt-helper>
+    <snw-ls account="{{_account}}" jwt="{{_jwt}}"></snw-ls>
+    <snw-account-manager id="manager"></snw-account-manager>
+
+    <template is="dom-if" if="{{_isLoggedIn}}">
+      <paper-button>Account</paper-button>
+      <paper-button>Logout</paper-button>
+    </template>
+    <template is="dom-if" if="{{!_isLoggedIn}}">
+      <paper-button>Login</paper-button>
+      <paper-button>Register</paper-button>
+    </template>
   </template>
 
   <script>
     (function () {
       'use strict';
       Polymer({
-        is: 'snw-login'
+        is: 'snw-login',
+
+        properties:{
+
+          _isLoggedIn: {
+            type: Boolean,
+            value: false
+          },
+
+          _jwt:{
+            type: Object,
+            value: {},
+            observer: '_jwtChanged'
+          },
+
+          _account:{
+            type: Object,
+            value: {},
+            observer: '_accountChanged'
+          }
+        },
+
+        _jwtChanged: function () {
+          if(this._jwt.length < 5){
+//            this.logout(this._jwt); //TODO
+          }else{
+//            this.verifyLogin(this._jwt); //TODO
+          }
+        },
+
+        _accountChanged: function () {
+          if(this._account.length < 5){
+//            this.logout(this._jwt); //TODO
+          }else{
+//            this.verifyLogin(this._jwt); //TODO
+          }
+        }
       });
     })();
   </script>

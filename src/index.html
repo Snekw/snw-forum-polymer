@@ -52,74 +52,28 @@
 <div id="splash"></div>
 
 <template is="dom-bind" id="app">
-  <paper-drawer-panel>
-    <paper-scroll-header-panel drawer fixed>
-      <!-- Drawer Content -->
-      <paper-menu attr-for-selected="data-route" selected="[[route]]">
-        <a data-route="home" href="{{baseUrl}}">
-          <iron-icon icon="home"></iron-icon>
-          <span>Home</span>
-        </a>
-        <a data-route="contact" href="{{baseUrl}}contact">
-          <iron-icon icon="mail"></iron-icon>
-          <span>Contact</span>
-        </a>
-      </paper-menu>
-    </paper-scroll-header-panel>
-  </paper-drawer-panel>
-  <!--<paper-drawer-panel id="paperDrawerPanel">-->
-    <!--&lt;!&ndash; Drawer &ndash;&gt;-->
-    <!--<paper-scroll-header-panel drawer fixed>-->
-      <!--&lt;!&ndash; Drawer Toolbar &ndash;&gt;-->
-      <!--<paper-toolbar id="drawerToolbar">-->
-        <!--<span class="menu-name">Menu</span>-->
-      <!--</paper-toolbar>-->
+  <snw-router></snw-router>
 
-      <!--&lt;!&ndash; Drawer Content &ndash;&gt;-->
-      <!--<paper-menu class="src-menu" attr-for-selected="data-route" selected="[[route]]">-->
-        <!--<a data-route="home" href="{{baseUrl}}">-->
-          <!--<iron-icon icon="home"></iron-icon>-->
-          <!--<span>Home</span>-->
-        <!--</a>-->
-        <!--<a data-route="contact" href="{{baseUrl}}contact">-->
-          <!--<iron-icon icon="mail"></iron-icon>-->
-          <!--<span>Contact</span>-->
-        <!--</a>-->
-      <!--</paper-menu>-->
-    <!--</paper-scroll-header-panel>-->
+  <paper-header-panel>
+    <div class="paper-header">
+      <paper-toolbar>
+        <div class="title layout horizontal center-justified">Title</div>
+        <div class="content">
+          <snw-login></snw-login>
+        </div>
+      </paper-toolbar>
+      <paper-tabs attr-for-selected="data-route" selected="{{route}}" align-bottom>
+        <paper-tab data-route="home" link><a href="#!/home" class="link" tabindex="-1">Home</a></paper-tab>
+        <paper-tab data-route="about" link><a href="#!/about" class="link" tabindex="-1">About</a></paper-tab>
+        <paper-tab data-route="forum" link><a href="#!/forum" class="link" tabindex="-1">Forum</a></paper-tab>
+        <paper-tab data-route="servers" link><a href="#!/servers" class="link" tabindex="-1">Servers</a></paper-tab>
+      </paper-tabs>
+    </div>
+  </paper-header-panel>
 
-    <!--&lt;!&ndash; Main Area &ndash;&gt;-->
-    <!--<paper-scroll-header-panel id="headerPanelMain" main fixed>-->
-      <!--&lt;!&ndash; Main Toolbar 'header' &ndash;&gt;-->
-      <!--<paper-toolbar id="mainToolbar">-->
-        <!--<paper-icon-button id="drawerToggle" icon="menu" paper-drawer-toggle></paper-icon-button>-->
-        <!--&lt;!&ndash; Site name &ndash;&gt;-->
-        <!--<div class="middle middle-container">-->
-          <!--<div class="src-name">Snw-Forum-Polymer</div>-->
-        <!--</div>-->
-      <!--</paper-toolbar>-->
-
-      <!--<div class="content">-->
-        <!--<neon-animated-pages attr-for-selected="data-route" selected="{{route}}" entry-animation="slide-from-left-animation"exit-animation="slide-left-animation">-->
-
-          <!--<neon-animatable data-route="home" tabindex="-1">-->
-            <!--<paper-material elevation="1">-->
-              <!--<h1 class="page-title" tabindex="-1">Home</h1>-->
-            <!--</paper-material>-->
-          <!--</neon-animatable>-->
-
-          <!--<neon-animatable data-route="contact" tabindex="-1">-->
-            <!--<paper-material elevation="1">-->
-              <!--<h1 class="page-title" tabindex="-1">Contact</h1>-->
-            <!--</paper-material>-->
-          <!--</neon-animatable>-->
-
-        <!--</neon-animated-pages>-->
-      <!--</div>-->
-
-    <!--</paper-scroll-header-panel>-->
-  <!--</paper-drawer-panel>-->
-  <snw-toast id="snwtoast"></snw-toast>
+  <div class="content">
+  </div>
+  <snw-toast id="stoast"></snw-toast>
 </template>
 
 

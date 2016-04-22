@@ -1,14 +1,100 @@
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <dom-module id="snw-ls">
   <template>
+    <snw-jwt-helper id="jwtHelper"></snw-jwt-helper>
+    <iron-localstorage id="lsjwt" name="jwt-storage"
+                       value="{{_jwt}}"
+                       on-iron-localstorage-load-empty="initializeDefault2"></iron-localstorage>
+    <iron-localstorage id="lsaccount" name="account-storage"
+                       value="{{_account}}"
+                       on-iron-localstorage-load-empty="initializeDefault"></iron-localstorage>
   </template>
 
   <script>
     (function () {
       'use strict';
       Polymer({
-        is: 'snw-ls'
+        is: 'snw-ls',
+
+        //TODO verify jwt when loading it
+
+        properties:{
+
+          //Public
+          /**
+           * Account stored in localstorage
+           */
+          account:{
+            type: Object,
+            notify: true,
+            observer: '_accountChanged'
+          },
+          /**
+           * Jwt stored in localstorage
+           */
+          jwt:{
+            type: String,
+            notify: true,
+            observer: '_jwtChanged'
+          },
+
+          /*****************************************************/
+          //Private
+
+          /**
+           * Account stored in localstorage
+           */
+          _account:{
+            type: Object,
+            notify: true
+          },
+          /**
+           * Jwt stored in localstorage
+           */
+          _jwt:{
+            type: String,
+            notify: true
+          }
+        },
+
+        initializeDefault: function () {
+          this._account = {};
+        },
+
+        initializeDefault2: function () {
+          this._jwt = "";
+        },
+
+        reload: function(){
+          this.$.lsjwt.reload();
+          this.$.lsaccount.reload();
+        },
+
+        //Don't accept empty value
+        _accountChanged: function () {
+          if (this._account != {} && this.account == {})
+              return;
+
+          this._account = this.account;
+        },
+
+        //Don't accept empty value
+        _jwtChanged: function () {
+          if (this._jwt != "" && this.jwt == "")
+            return;
+
+          this._jwt = this.jwt;
+        },
+
+        deleteJwt: function () {
+          this._jwt = ""
+        },
+
+        deleteAccount: function () {
+          this._account = ""
+        }
+
       });
     })();
   </script>

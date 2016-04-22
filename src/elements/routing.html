@@ -11,38 +11,77 @@
 
     // Middleware
     function scrollToTop(ctx, next) {
-      app.scrollPageToTop();
+//      app.scrollPageToTop();
       next();
     }
 
     function setFocus(selected){
-      document.querySelector('neon-animatable[data-route="' + selected + '"] .page-title').focus();
+//      document.querySelector('neon-animatable[data-route="' + selected + '"] .page-title').focus();
     }
+
+    var home = function () {
+      app.route = 'home';
+      setFocus(app.route);
+    };
+
+    var user = function () {
+      app.route = 'user';
+      setFocus(app.route);
+    };
+
+    var about = function () {
+      app.route = 'about';
+      setFocus(app.route);
+    };
+
+    var servers = function () {
+      app.route = 'servers';
+      setFocus(app.route);
+    };
+
+    var admin = function () {
+      app.route = 'admin';
+      setFocus(app.route);
+    };
+
+    var forum = function () {
+      app.route = 'forum';
+      setFocus(app.route);
+    };
 
     // Routes
     page('*', scrollToTop, function(ctx, next) {
       next();
     });
 
-    page('/', function() {
-      app.route = 'home';
-      setFocus(app.route);
-    });
+    //All routes are there twice to fix the inconsistency between browsers.
+    //HACK Revise this later
+    //Chrome works with only one slash
+    //Firefox needs two slashes
 
-    page(app.baseUrl, function() {
-      app.route = 'home';
-      setFocus(app.route);
-    });
+    page('/home', home);
+    page('//home', home);
+    page(app.baseUrl, home);
 
-    page('/contact', function () {
-      app.route = 'contact';
-      setFocus(app.route);
-    });
+    page('//forum', forum);
+    page('/forum', forum);
+
+    page('//servers', servers);
+    page('/servers', servers);
+
+    page('//about', about);
+    page('/about', about);
+
+    page('//admin',admin);
+    page('/admin',admin);
+
+    page('//user', user);
+    page('/user', user);
 
     // 404
     page('*', function() {
       var text = 'Can\'t find: ' + window.location.href  + '. Redirected you to Home Page';
-      app.$.snwtoast.show(true, text);
+      app.$.stoast.show(true, text);
       page.redirect(app.baseUrl);
     });
 

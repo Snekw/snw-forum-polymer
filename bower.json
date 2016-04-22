@@ -18,7 +18,10 @@
     "google-sheets": "GoogleWebComponents/google-sheets#^1.0.5",
     "google-youtube-upload": "GoogleWebComponents/google-youtube-upload#^2.0.0",
     "google-castable-video": "GoogleWebComponents/google-castable-video#^1.0.2",
-    "marked-element": "PolymerElements/marked-element#^1.1.3"
+    "marked-element": "PolymerElements/marked-element#^1.1.3",
+    "snw-toast": "^0.1.8",
+    "snw-jwt-helper": "^0.1.6",
+    "page": "visionmedia/page.js#^1.7.1"
   },
   "devDependencies": {
     "web-component-tester": "^4.2.2"

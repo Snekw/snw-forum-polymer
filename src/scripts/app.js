@@ -27,7 +27,6 @@
     window.Polymer.dom = 'shadow';
 
     var elements = [
-      'bower_components/polymer/polymer.html',
       'bundles/min-elements.html'
     ];
 
@@ -43,11 +42,18 @@
       if (importCount > 0)
         return;
 
+      //Inject the flex layout classes
+      var myDomModule = document.createElement('style', 'custom-style');
+      myDomModule.setAttribute('include', 'iron-flex iron-flex-alignment app-theme');
+      document.head.appendChild(myDomModule);
+
       var loadEl = document.getElementById('splash');
       loadEl.addEventListener('transitionend', loadEl.remove);
       document.body.classList.remove('loading');
       var splash = document.getElementById('splash');
       splash.parentNode.removeChild(splash);
+
+      Polymer.updateStyles();
     };
 
     elements.forEach(function (elementURL) {
@@ -76,7 +82,7 @@
 
   }
 
-  var app = document.querySelector('#src');
+  var app = document.querySelector('#app');
 
   app.baseUrl = '/';
   app.webComponentSupport = webComponentsSupported;
@@ -84,10 +90,5 @@
   if (window.location.port === '') {  // if production e.g. gh-pages
     app.baseUrl = '/snw-forum-polymer/';
   }
-
-  // Scroll page to top and expand header
-  app.scrollPageToTop = function() {
-    app.$.headerPanelMain.scrollToTop(true);
-  };
 
 })(document);

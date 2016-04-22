@@ -1,14 +1,36 @@
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <dom-module id="snw-account-manager">
   <template>
+    <snw-jwt-helper></snw-jwt-helper>
+    <snw-ls account="{{_account}}" jwt="{{_jwt}}"></snw-ls>
   </template>
 
   <script>
     (function () {
       'use strict';
       Polymer({
-        is: 'snw-account-manager'
+        is: 'snw-account-manager',
+
+        properties:{
+          //Public
+
+
+
+          /*******************************************/
+          //Private
+          _jwt:{
+            type: Object,
+            value: {}
+          },
+
+          _account:{
+            type: Object,
+            value: {}
+          }
+
+
+        }
       });
     })();
   </script>

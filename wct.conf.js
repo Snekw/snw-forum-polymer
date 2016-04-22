@@ -3,6 +3,9 @@
  */
 var browsers = require('./sauce.browsers');
 module.exports = {
+  suites:[
+    'src/test'
+  ],
   plugins:{
     local:{
       disabled: false,
