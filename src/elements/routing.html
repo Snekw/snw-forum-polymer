@@ -1,0 +1,64 @@
+<script src="../bower_components/page/page.js"></script>
+<script>
+  var routing = function() {
+
+    // We use Page.js for routing.
+
+    // Removes end / from app.baseUrl which page.base requires for production
+    if (window.location.port === '') {  // if production
+      page.base(app.baseUrl.replace(/\/$/, ''));
+    }
+
+    // Middleware
+    function scrollToTop(ctx, next) {
+      app.scrollPageToTop();
+      next();
+    }
+
+    function setFocus(selected){
+      document.querySelector('neon-animatable[data-route="' + selected + '"] .page-title').focus();
+    }
+
+    // Routes
+    page('*', scrollToTop, function(ctx, next) {
+      next();
+    });
+
+    page('/', function() {
+      app.route = 'home';
+      setFocus(app.route);
+    });
+
+    page(app.baseUrl, function() {
+      app.route = 'home';
+      setFocus(app.route);
+    });
+
+    page('/contact', function () {
+      app.route = 'contact';
+      setFocus(app.route);
+    });
+
+    // 404
+    page('*', function() {
+      var text = 'Can\'t find: ' + window.location.href  + '. Redirected you to Home Page';
+      app.$.snwtoast.show(true, text);
+      page.redirect(app.baseUrl);
+    });
+
+    // add #! before urls
+    page({
+      hashbang: true
+    });
+  };
+
+  if (!app.webComponentSupport){
+    window.addEventListener('WebComponentsReady', routing);
+  }else{
+    if (document.readyState === 'interactive' || document.readyState === 'complete'){
+      routing();
+    }else{
+      window.addEventListener('DOMContentLoaded', routing);
+    }
+  }
+</script>

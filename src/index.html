@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Forum for gaming communities">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Snw-Forum-Polymer</title>
+
+  <!-- FAVICON -->
+  <link rel='shortcut icon' type='image/x-icon' href='favicon.ico'/>
+  <!-- Chrome Android -->
+  <meta name="theme-color" content="#2E3AA1">
+  <!-- Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <!-- Chrome Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="SNW">
+  <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
+  <!-- IOS Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Snw-Dedi">
+  <link rel="apple-touch-icon" href="images/touch/apple-touch-icon.png">
+  <!-- win8 -->
+  <meta name="msapplication-TileColor" content="#3372DF">
+  <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    body.loading #splash {
+      opacity: 1;
+    }
+    #splash {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transition: opacity 300ms cubic-bezier(0,0,0.2,1);
+      opacity: 0;
+      will-change: opacity;
+      z-index: 1;
+      background-color: #E53935;
+    }
+  </style>
+</head>
+<body class="loading">
+<!-- build:remove -->
+<span id="browser-sync-binding"></span>
+<!-- endbuild -->
+
+<div id="splash"></div>
+
+<template is="dom-bind" id="app">
+  <paper-drawer-panel>
+    <paper-scroll-header-panel drawer fixed>
+      <!-- Drawer Content -->
+      <paper-menu attr-for-selected="data-route" selected="[[route]]">
+        <a data-route="home" href="{{baseUrl}}">
+          <iron-icon icon="home"></iron-icon>
+          <span>Home</span>
+        </a>
+        <a data-route="contact" href="{{baseUrl}}contact">
+          <iron-icon icon="mail"></iron-icon>
+          <span>Contact</span>
+        </a>
+      </paper-menu>
+    </paper-scroll-header-panel>
+  </paper-drawer-panel>
+  <!--<paper-drawer-panel id="paperDrawerPanel">-->
+    <!--&lt;!&ndash; Drawer &ndash;&gt;-->
+    <!--<paper-scroll-header-panel drawer fixed>-->
+      <!--&lt;!&ndash; Drawer Toolbar &ndash;&gt;-->
+      <!--<paper-toolbar id="drawerToolbar">-->
+        <!--<span class="menu-name">Menu</span>-->
+      <!--</paper-toolbar>-->
+
+      <!--&lt;!&ndash; Drawer Content &ndash;&gt;-->
+      <!--<paper-menu class="src-menu" attr-for-selected="data-route" selected="[[route]]">-->
+        <!--<a data-route="home" href="{{baseUrl}}">-->
+          <!--<iron-icon icon="home"></iron-icon>-->
+          <!--<span>Home</span>-->
+        <!--</a>-->
+        <!--<a data-route="contact" href="{{baseUrl}}contact">-->
+          <!--<iron-icon icon="mail"></iron-icon>-->
+          <!--<span>Contact</span>-->
+        <!--</a>-->
+      <!--</paper-menu>-->
+    <!--</paper-scroll-header-panel>-->
+
+    <!--&lt;!&ndash; Main Area &ndash;&gt;-->
+    <!--<paper-scroll-header-panel id="headerPanelMain" main fixed>-->
+      <!--&lt;!&ndash; Main Toolbar 'header' &ndash;&gt;-->
+      <!--<paper-toolbar id="mainToolbar">-->
+        <!--<paper-icon-button id="drawerToggle" icon="menu" paper-drawer-toggle></paper-icon-button>-->
+        <!--&lt;!&ndash; Site name &ndash;&gt;-->
+        <!--<div class="middle middle-container">-->
+          <!--<div class="src-name">Snw-Forum-Polymer</div>-->
+        <!--</div>-->
+      <!--</paper-toolbar>-->
+
+      <!--<div class="content">-->
+        <!--<neon-animated-pages attr-for-selected="data-route" selected="{{route}}" entry-animation="slide-from-left-animation"exit-animation="slide-left-animation">-->
+
+          <!--<neon-animatable data-route="home" tabindex="-1">-->
+            <!--<paper-material elevation="1">-->
+              <!--<h1 class="page-title" tabindex="-1">Home</h1>-->
+            <!--</paper-material>-->
+          <!--</neon-animatable>-->
+
+          <!--<neon-animatable data-route="contact" tabindex="-1">-->
+            <!--<paper-material elevation="1">-->
+              <!--<h1 class="page-title" tabindex="-1">Contact</h1>-->
+            <!--</paper-material>-->
+          <!--</neon-animatable>-->
+
+        <!--</neon-animated-pages>-->
+      <!--</div>-->
+
+    <!--</paper-scroll-header-panel>-->
+  <!--</paper-drawer-panel>-->
+  <snw-toast id="snwtoast"></snw-toast>
+</template>
+
+
+<script src="scripts/app.js"></script>
+</body>
+</html>
