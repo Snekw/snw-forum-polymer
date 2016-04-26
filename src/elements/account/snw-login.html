@@ -44,7 +44,7 @@
 
         _jwtChanged: function () {
           if(this._jwt.length < 5){
-//            this.logout(this._jwt); //TODO
+            this.$.manager.logout();
           }else{
 //            this.verifyLogin(this._jwt); //TODO
           }
@@ -52,7 +52,7 @@
 
         _accountChanged: function () {
           if(this._account.length < 5){
-//            this.logout(this._jwt); //TODO
+            this.$.manager.logout();
           }else{
 //            this.verifyLogin(this._jwt); //TODO
           }

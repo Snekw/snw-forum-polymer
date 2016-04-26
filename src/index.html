@@ -30,6 +30,9 @@
     body.loading #splash {
       opacity: 1;
     }
+    body.loading #splash2 {
+      opacity: 1;
+    }
     #splash {
       position: absolute;
       top: 0;
@@ -40,16 +43,28 @@
       opacity: 0;
       will-change: opacity;
       z-index: 1;
-      background-color: #E53935;
+      background-color: #212121;
+    }
+
+    #splash2{
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 112px;
+      background-color: #424b4b;
     }
   </style>
 </head>
-<body class="loading">
+<body class="loading fullbleed">
 <!-- build:remove -->
 <span id="browser-sync-binding"></span>
 <!-- endbuild -->
 
-<div id="splash"></div>
+<div id="splash">
+  <div id="splash2"></div>
+</div>
 
 <template is="dom-bind" id="app">
   <snw-router></snw-router>
@@ -62,20 +77,20 @@
           <snw-login></snw-login>
         </div>
       </paper-toolbar>
-      <paper-tabs attr-for-selected="data-route" selected="{{route}}" align-bottom>
-        <paper-tab data-route="home" link><a href="#!/home" class="link" tabindex="-1">Home</a></paper-tab>
-        <paper-tab data-route="about" link><a href="#!/about" class="link" tabindex="-1">About</a></paper-tab>
-        <paper-tab data-route="forum" link><a href="#!/forum" class="link" tabindex="-1">Forum</a></paper-tab>
-        <paper-tab data-route="servers" link><a href="#!/servers" class="link" tabindex="-1">Servers</a></paper-tab>
+      <paper-tabs id="tabs" fallback-selection="home" attr-for-selected="data-route" selected="{{route}}" align-bottom>
+        <paper-tab data-route="home" link><a href="#/home" class="link" tabindex="-1">Home</a></paper-tab>
+        <paper-tab data-route="about" link><a href="#/about" class="link" tabindex="-1">About</a></paper-tab>
+        <paper-tab data-route="forum" link><a href="#/forum" class="link" tabindex="-1">Forum</a></paper-tab>
+        <paper-tab data-route="servers" link><a href="#/servers" class="link" tabindex="-1">Servers</a></paper-tab>
       </paper-tabs>
+    </div>
+    <div class="fit">
+      <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend enim in nisl euismod fermentum. Pellentesque volutpat est vel convallis euismod. Vestibulum a odio libero. Nullam dignissim nulla urna, sed semper mauris lacinia sed. Donec malesuada magna a dolor ultrices, id ultrices dolor laoreet. Praesent nec tincidunt lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum venenatis orci id lorem commodo auctor.</div>
     </div>
   </paper-header-panel>
 
-  <div class="content">
-  </div>
   <snw-toast id="stoast"></snw-toast>
 </template>
-
 
 <script src="scripts/app.js"></script>
 </body>

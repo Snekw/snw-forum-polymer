@@ -44,7 +44,7 @@
 
       //Inject the flex layout classes
       var myDomModule = document.createElement('style', 'custom-style');
-      myDomModule.setAttribute('include', 'iron-flex iron-flex-alignment app-theme');
+      myDomModule.setAttribute('include', 'iron-flex iron-flex-alignment iron-positioning app-theme');
       document.head.appendChild(myDomModule);
 
       var loadEl = document.getElementById('splash');
@@ -53,6 +53,8 @@
       var splash = document.getElementById('splash');
       splash.parentNode.removeChild(splash);
 
+      //Update the styles. As we loaded and injected some css
+      //Updates the native shadow dom
       Polymer.updateStyles();
     };
 
@@ -79,16 +81,14 @@
         elImport.addEventListener('load', onImportLoaded);
       }
     });
-
   }
 
   var app = document.querySelector('#app');
 
-  app.baseUrl = '/';
+  app.baseUrl = '';
   app.webComponentSupport = webComponentsSupported;
 
   if (window.location.port === '') {  // if production e.g. gh-pages
-    app.baseUrl = '/snw-forum-polymer/';
+    app.baseUrl = '/snw-forum-polymer';
   }
-
 })(document);

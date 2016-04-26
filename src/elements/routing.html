@@ -1,13 +1,14 @@
 <script src="../bower_components/page/page.js"></script>
 <script>
-  var routing = function() {
+  function routing() {
 
     // We use Page.js for routing.
-
-    // Removes end / from app.baseUrl which page.base requires for production
-    if (window.location.port === '') {  // if production
-      page.base(app.baseUrl.replace(/\/$/, ''));
+    var isNew = false;
+    if(app.route === undefined){
+      isNew = true;
     }
+
+    page.base('/#');
 
     // Middleware
     function scrollToTop(ctx, next) {
@@ -16,7 +17,19 @@
     }
 
     function setFocus(selected){
-//      document.querySelector('neon-animatable[data-route="' + selected + '"] .page-title').focus();
+
+      //Work around for the tab bar not being set when first coming to the site
+      if(isNew){
+        isNew = false;
+        var tabs = app.$.tabs.__data__.items;
+        var i = 0;
+        for(i = 0; i < tabs.length; i++){
+          if(tabs[i].classList.contains('iron-selected')){
+            break;
+          }
+        }
+        app.$.tabs._positionBar(100 / tabs.length, 100/tabs.length*i);
+      }
     }
 
     var home = function () {
@@ -54,28 +67,20 @@
       next();
     });
 
-    //All routes are there twice to fix the inconsistency between browsers.
-    //HACK Revise this later
-    //Chrome works with only one slash
-    //Firefox needs two slashes
+    //Redirect to home if no other route
+    page('/', '/home');
 
     page('/home', home);
-    page('//home', home);
     page(app.baseUrl, home);
 
-    page('//forum', forum);
     page('/forum', forum);
 
-    page('//servers', servers);
     page('/servers', servers);
 
-    page('//about', about);
     page('/about', about);
 
-    page('//admin',admin);
     page('/admin',admin);
 
-    page('//user', user);
     page('/user', user);
 
     // 404
@@ -87,9 +92,9 @@
 
     // add #! before urls
     page({
-      hashbang: true
+      hashbang: false
     });
-  };
+  }
 
   if (!app.webComponentSupport){
     window.addEventListener('WebComponentsReady', routing);
