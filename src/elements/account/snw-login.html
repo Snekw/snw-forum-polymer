@@ -1,19 +1,158 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../elements/helpers/snw-ajax.html">
+<link rel="import" href="../../elements/helpers/snw-ls.html">
 
 <dom-module id="snw-login">
+  <!--<style include="dark-theme">-->
+  <style>
+    paper-dialog {
+      background-color: var(--dark-primary-color);
+      color: var(--dark-theme-text-color);
+    }
+
+    paper-dialog paper-button{
+      color: var(--dark-theme-text-color);
+      text-transform: none;
+    }
+
+    .error {
+      color: var(--theme-error-color);
+    }
+
+    :host{
+      --paper-input-container-invalid-color: var(--paper-progress-secondary-color);
+    }
+  </style>
+
   <template>
     <snw-jwt-helper id="jwtHelper"></snw-jwt-helper>
-    <snw-ls account="{{_account}}" jwt="{{_jwt}}"></snw-ls>
-    <snw-account-manager id="manager"></snw-account-manager>
+    <snw-ls id="sals"></snw-ls>
+    <paper-button data-dialog="login" on-tap="openDialog">Login</paper-button>
+    <paper-button data-dialog="register" on-tap="openDialog">Register</paper-button>
 
-    <template is="dom-if" if="{{_isLoggedIn}}">
-      <paper-button>Account</paper-button>
-      <paper-button>Logout</paper-button>
-    </template>
-    <template is="dom-if" if="{{!_isLoggedIn}}">
-      <paper-button>Login</paper-button>
-      <paper-button>Register</paper-button>
-    </template>
+    <!-- Login dialog -->
+    <paper-dialog style="width: 400px;" id="login" with-backdrop="true" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2>Login</h2>
+      <div class="buttons">
+        <paper-button data-dialog="login" data-next="register" on-tap="closeDialog">Don't have an account? Register</paper-button>
+      </div>
+
+      <template is="dom-if" if="{{loginError}}" >
+        <span style="color: red">{{loginErrorMessage}}</span>
+      </template>
+
+      <form is="iron-form"
+            id="login-form"
+            method="post"
+            action="http://localhost:443/auth/default"
+            on-iron-form-response="handleLoginResponse"
+            on-iron-form-error="handleLoginError">
+        <paper-input name="email"
+                     label="Email"
+                     auto-validate
+                     required
+                     pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                     error-message="A valid email is required!"
+                     value="{{sEmail}}"
+        ></paper-input>
+        <paper-input name="pw"
+                     label="Password"
+                     type="password"
+                     auto-validate
+                     required
+                     minlength="6"
+                     maxlength="255"
+                     value="{{sPw}}"
+                     error-message="Password is required! Min. 6 characters. Max. 255 Characters."
+        ></paper-input>
+        <div class="buttons">
+          <paper-button data-form="login" on-tap="submitForm" autofocus>Submit</paper-button>
+        </div>
+      </form>
+
+      <div class="buttons">
+        <paper-button dialog-dismiss raised>Cancel</paper-button>
+      </div>
+    </paper-dialog>
+
+    <!-- Register dialog -->
+    <paper-dialog style="width: 400px;" id="register" with-backdrop="true" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2>Register</h2>
+      <div class="buttons">
+        <paper-button data-dialog="register" data-next="login" on-tap="closeDialog">Already have an account? Login</paper-button>
+      </div>
+
+      <template is="dom-if" if="{{registerError}}" >
+        <template is="dom-if" if="{{registerErrorEmail}}">
+          <span class="error">Email already used</span>
+        </template>
+        <template is="dom-if" if="{{registerErrorUsername}}">
+          <span class="error">Username already used</span>
+        </template>
+      </template>
+
+      <form is="iron-form"
+            id="register-form"
+            method="post"
+            action="http://localhost:443/auth/default/r"
+            on-iron-form-response="handleRegisterResponse"
+            on-iron-form-error="handleRegisterError">
+
+        <paper-input name="userName"
+                     label="Username"
+                     value="{{sUsername}}"
+                     on-change="checkValidity"
+                     required
+                     minlength="4"
+                     maxlength="64"
+                     error-message="Username is required! Min. 4 characters. Max. 64 Characters."
+        ></paper-input>
+
+        <paper-input name="email"
+                     label="Email"
+                     on-change="checkValidity"
+                     required
+                     pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                     error-message="A valid email is required!"
+                     value="{{sEmail}}"
+        ></paper-input>
+
+        <paper-input name="pw"
+                     label="Password"
+                     type="password"
+                     auto-validate
+                     required
+                     minlength="6"
+                     maxlength="255"
+                     value="{{sPw}}"
+                     error-message="Password is required! Min. 6 characters. Max. 255 Characters."
+        ></paper-input>
+        <paper-input label="Password again"
+                     type="password"
+                     auto-validate
+                     pattern="{{sPw}}"
+                     required
+                     minlength="6"
+                     maxlength="255"
+                     error-message="Password doesn't match!"
+        ></paper-input>
+
+        <div class="buttons">
+          <paper-button data-form="register" on-tap="submitForm" autofocus>Submit</paper-button>
+        </div>
+
+        <snw-ajax id="validityCheck" cmd="/auth/validate" body="{{_validity}}" on-response="handleValidityCheckResponse"></snw-ajax>
+
+      </form>
+
+      <div class="buttons">
+        <paper-button dialog-dismiss raised>Cancel</paper-button>
+      </div>
+    </paper-dialog>
+
   </template>
 
   <script>
@@ -22,40 +161,61 @@
       Polymer({
         is: 'snw-login',
 
-        properties:{
+        properties: {
 
-          _isLoggedIn: {
-            type: Boolean,
-            value: false
-          },
 
-          _jwt:{
-            type: Object,
-            value: {},
-            observer: '_jwtChanged'
-          },
+          _validityCheckInProgress: Boolean
+        },
 
-          _account:{
-            type: Object,
-            value: {},
-            observer: '_accountChanged'
+        openDialog: function(e){
+          this.getDialogFromEvent(e).open();
+        },
+
+        closeDialog: function(e){
+          var dial = this.getDialogFromEvent(e);
+          dial.close();
+          if(e.target.hasAttribute('data-next')){
+            var next = e.target.getAttribute('data-next');
+            this.getDialogFromId(next).open();
           }
         },
 
-        _jwtChanged: function () {
-          if(this._jwt.length < 5){
-            this.$.manager.logout();
-          }else{
-//            this.verifyLogin(this._jwt); //TODO
+        getDialogFromEvent: function(e){
+          if(!e.target.hasAttribute('data-dialog')){
+            return;
+          }
+          return this.$$('#'+ e.target.getAttribute('data-dialog'));
+        },
+
+        getDialogFromId: function(id){
+          return this.$$('#' + id);
+        },
+
+        submitForm: function (e) {
+          this.loginError = false;
+          this.registerError = false;
+          var id = e.target;
+          id = id.getAttribute('data-form');
+          this.$$('#'+id+'-form').submit();
+        },
+
+        checkValidity: function (e) {
+          this._validity = {
+            type: e.target.getAttribute('name'),
+            data: e.target.value
+          };
+          if(e.target.validate() && !this._validityCheckInProgress){
+            this._validityCheckInProgress = true;
+            this.$.validityCheck.generateRequest();
+            this._validity.element = e.target;
           }
         },
 
-        _accountChanged: function () {
-          if(this._account.length < 5){
-            this.$.manager.logout();
-          }else{
-//            this.verifyLogin(this._jwt); //TODO
-          }
+        handleValidityCheckResponse: function (e) {
+          this._validityCheckInProgress = false;
+
+          if(e.detail.detail)
+            this._validity.element.invalid = !e.detail.detail.response.data.isValid;
         }
       });
     })();

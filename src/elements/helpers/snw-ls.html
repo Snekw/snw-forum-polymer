@@ -1,8 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
 
 <dom-module id="snw-ls">
   <template>
-    <snw-jwt-helper id="jwtHelper"></snw-jwt-helper>
     <iron-localstorage id="lsjwt" name="jwt-storage"
                        value="{{_jwt}}"
                        on-iron-localstorage-load-empty="initializeDefault2"></iron-localstorage>
@@ -93,6 +93,14 @@
 
         deleteAccount: function () {
           this._account = ""
+        },
+
+        setJwt: function(jwt){
+          this._jwt = jwt;
+        },
+
+        setAccount: function(account){
+          this._account = account;
         }
 
       });

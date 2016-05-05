@@ -1,0 +1,66 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<!--
+## Snw-jwt-helper
+`<snw-jwt-helper>` Helper functions to deal with JsonWebTokens
+
+More info on JsonWebTokens [Jwt.io](https://jwt.io/)
+
+-->
+<dom-module id="snw-jwt-helper">
+  <template>
+  </template>
+  <script>
+    (function () {
+      'use strict';
+      Polymer({
+        is: 'snw-jwt-helper',
+
+        /**
+         * Decode the jwt
+         * @param {string} jwt Jwt to decode
+         * @return {object} Decoded token or null
+         */
+        decodeJwt: function (jwt) {
+          var token = jwt;
+          if(token && token != 'undefined'){
+            try{
+              var parsed = JSON.parse(window.atob(token.split('.')[1]));
+
+              if (parsed){
+                return parsed;
+              }else{
+                return null;
+              }
+            }catch (err){
+              console.log(err);
+              return null;
+            }
+          }else{
+            return null;
+          }
+        },
+
+        /**
+         * Check if jwt has expired
+         * @param {string} jwt Jwt to check
+         * @return {boolean} True expired / False not expired
+         */
+        hasExpired: function (jwt) {
+          var token = this.decodeJwt(jwt);
+          if (!token || !token.exp){
+            return false;
+          }
+
+          //Expired if token is larger than now
+          //*100 to compensate the fact that there is no milliseconds stored on the exp field
+          if (new Date(token.exp * 100) < Date.now()){
+            return true;
+          }else{
+            return false;
+          }
+        }
+      });
+    })();
+  </script>
+</dom-module>

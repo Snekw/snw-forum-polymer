@@ -10,7 +10,6 @@ var $                  = require('gulp-load-plugins')();
 var del                = require('del');
 var runSequence        = require('run-sequence');
 var browserSync        = require('browser-sync');
-var reload             = browserSync.reload;
 var merge              = require('merge-stream');
 var path               = require('path');
 var fs                 = require('fs');
@@ -19,7 +18,6 @@ var historyApiFallback = require('connect-history-api-fallback');
 var pkg                = require('./package.json');
 var crypto             = require('crypto');
 var ensureFiles        = require('./tasks/ensure-files.js');
-var polyclean          = require('polyclean');
 
 //Static
 var AUTOPREFIXER_BROWSERS = [
@@ -43,18 +41,30 @@ var dist = function ( subPath ) {
   return !subPath ? DIST : path.join(DIST, subPath);
 };
 
-var styleTask = function ( stylesPath, srcs ) {
-  return gulp.src(
-    srcs.map(function ( src ) {
-      return path.join('src', stylesPath, src);
-    }))
-    .pipe($.changed(stylesPath, {extension: '.css'}))
+var styleTask = function ( src ){
+  return gulp.src(src, {base: './'})
+    .pipe($.sass())
     .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
-    .pipe(gulp.dest(path.join('.tmp', stylesPath)))
     .pipe($.cleanCss())
-    .pipe(gulp.dest(dist(stylesPath)))
-    // .pipe(del('.tmp'))
-    .pipe($.size({title: stylesPath}));
+    .pipe(gulp.dest('.'))
+    .pipe($.size({
+      title: 'scss'
+    }));
+};
+
+var styleModule = function(src, dest){
+  return gulp.src(src)
+    .pipe($.processhtml())
+    .pipe($.htmlmin({
+      collapseWhitespace: true,
+      removeComments: true,
+      sortAttributes: true,
+      sortClassName: true
+    }))
+    .pipe(gulp.dest(dest))
+    .pipe($.size({
+      title: 'styleModule'
+    }))
 };
 
 var imageminTask = function ( src, dest ) {
@@ -87,10 +97,25 @@ var cleanCss = function (src, dest) {
 
 var minifyHtml = function (src) {
   return gulp.src(src, {base: 'dist'})
-    .pipe($.htmlmin({collapseWhitespace: true}))
+    .pipe($.processhtml())
+    .pipe($.htmlmin({
+      collapseWhitespace: true,
+      removeComments: true,
+      sortAttributes: true,
+      sortClassName: true
+    }))
     .pipe(gulp.dest(dist()))
     .pipe($.size({
       title: 'minifyHtml'
+    }))
+};
+
+var minifyInline = function(src){
+  return gulp.src(src, {base: 'dist'})
+    .pipe($.minifyInline())
+    .pipe(gulp.dest(dist()))
+    .pipe($.size({
+      title:'minifyInline'
     }))
 };
 
@@ -101,7 +126,11 @@ var vulcanizeTask = function (src) {
       inlineCss: true,
       inlineScripts: true,
       stripExcludes: false,
-      excludes: '//fonts.googleapis.com/*'
+      excludes: [
+        '//fonts.googleapis.com/*',
+        '../polymer/',
+        '/styles/'
+      ]
     }))
     .pipe(gulp.dest(dist()))
     .pipe($.size({
@@ -123,9 +152,31 @@ var crisperTask = function (src) {
   Tasks
  */
 
+
+
+//Build dist
+gulp.task('build', ['clean'], function (cb) {
+  runSequence(
+    ['ensureFiles', 'copy', 'styles:dist'],
+    ['images', 'fonts'],
+    ['vulcanize', 'vulcanizePolymer'],
+    'crisper',
+    'minifyHtml',
+    ['uglify', 'minifyInline'],
+    cb);
+});
+
 //Prefix and clean css
-gulp.task('styles', function () {
-  return styleTask('styles', ['**/*.css']);
+gulp.task('styles', function(){
+  return styleTask(['src/styles/src/dark-theme/dark-theme.scss']);
+});
+
+gulp.task('styles:dev', ['styles'], function () {
+  return styleModule(['src/styles/src/**/*.html'], 'src/styles')
+});
+
+gulp.task('styles:dist',['styles'], function () {
+  return styleModule(['src/styles/src/**/*.html'], dist('styles'));
 });
 
 //Check that all of the need files are there
@@ -144,19 +195,17 @@ gulp.task('images', function () {
 //Copy root files
 gulp.task('copy', function () {
   var app = gulp.src([
-    'src/*',
-    '!src/test',
-    '!src/elements',
-    '!src/bundles',
-    '!src/bower_components',
-    '!**/.DS_Store'
+    'src/images',
+    'src/index.html',
+    'src/manifest.json',
+    'src/favicon.ico'
   ],{
     dot: true
   }).pipe(gulp.dest(dist()));
 
   var bower = gulp.src([
-    'src/bower_components/{webcomponentsjs,polymer,page}/**/*'
-  ]).pipe(gulp.dest(dist('bower_components')));
+    'src/bower_components/webcomponentsjs/webcomponents-lite.min.js'
+  ], {base:'src'}).pipe(gulp.dest(dist()));
 
   return merge(app, bower)
     .pipe($.size({
@@ -165,9 +214,14 @@ gulp.task('copy', function () {
 });
 
 //Search for assets and optimize
-gulp.task('html', function() {
+gulp.task('minifyHtml', function() {
   return minifyHtml(
-    ['dist/**/*.html', '!dist/{elements,test,bower_components}/**/*.html']);
+    ['dist/**/*.html']);
+});
+
+gulp.task('minifyInline', function(){
+  return minifyInline(
+    ['dist/**/*.html']);
 });
 
 gulp.task('uglify', function () {
@@ -186,7 +240,7 @@ gulp.task('fonts', function() {
 });
 
 //Watch the files and reload using browser-sync
-gulp.task('serve', ['styles'], function () {
+gulp.task('serve', ['styles:dev'], function () {
   browserSync({
     port: 1337,
     notify: false,
@@ -201,15 +255,15 @@ gulp.task('serve', ['styles'], function () {
     },
     https: false,
     server:{
-      baseDir: ['.tmp', 'src'],
+      baseDir: ['src'],
       middleWare: [historyApiFallback()]
     }
   });
 
-  gulp.watch(['src/**/*.html', '!src/bower_components/**/*.html', '!src/test/**/*'], reload);
-  gulp.watch(['src/styles/**/*.css'], ['styles', reload]);
-  gulp.watch(['src/scripts/**/*.js'], reload);
-  gulp.watch(['src/images/**/*'], reload);
+  gulp.watch(['src/**/*.html', '!src/bower_components/**/*.html', '!src/test/**/*', '!src/styles/**/*.html'], browserSync.reload);
+  gulp.watch(['src/styles/**/*.scss'], ['styles:dev', browserSync.reload]);
+  gulp.watch(['src/scripts/**/*.js'], browserSync.reload);
+  gulp.watch(['src/images/**/*'], browserSync.reload);
 });
 
 // Build and serve the output from the dist build
@@ -235,7 +289,24 @@ gulp.task('serve:dist', ['build'], function() {
 //Vulcanize
 gulp.task('vulcanize', function () {
   return vulcanizeTask(
-    ['src/index.html','src/bundles/**/*.html']);
+    ['src/elements/snw-forum-app.html']);
+});
+
+gulp.task('vulcanizePolymer', function(){
+  return gulp.src(['src/bower_components/polymer/polymer.html', 'src/bower_components/polymer/polymer-mini.html', 'src/bower_components/polymer/polymer-micro.html'], {base: 'src'})
+    .pipe($.vulcanize({
+      stripComments: true,
+      inlineCss: true,
+      inlineScripts: true,
+      stripExcludes: false,
+      excludes: [
+        '//fonts.googleapis.com/*'
+      ]
+    }))
+    .pipe(gulp.dest(dist()))
+    .pipe($.size({
+      title: 'vulcanize'
+    }));
 });
 
 // Clean output directory
@@ -249,19 +320,7 @@ gulp.task('cleanTmp', function() {
 });
 
 gulp.task('crisper', function () {
-  return crisperTask(['dist/index.html', 'dist/bundles/**/*.html'])
-});
-
-//Build dist
-gulp.task('build', ['clean'], function (cb) {
-  runSequence(
-    ['ensureFiles', 'copy', 'styles'],
-    ['images', 'fonts', 'cleanTmp'],
-    'vulcanize',
-    'crisper',
-    'html',
-    'uglify',
-    cb);
+  return crisperTask(['dist/elements/**/*.html'])
 });
 
 //Default task
@@ -284,13 +343,6 @@ gulp.task('gh-pages', function () {
       branch: 'gh-pages'
     }));
 });
-
-// gulp.task('polybuild', function () {
-//   return gulp.src(['src/index.html', 'src/bundles/admin.html', 'src/bundles/min-elements.html'])
-//     .pipe(polybuild({maximumCrush: true}))
-//     .pipe(gulp.dest('dist'));
-// });
-
 
 //Load tester
 require('web-component-tester').gulp.init(gulp);

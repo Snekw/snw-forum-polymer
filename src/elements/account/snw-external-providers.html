@@ -1,0 +1,26 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="snw-external-providers">
+  <style is="custom-style" include="dark-theme"></style>
+  <template>
+
+    <div>
+      <!-- External providers -->
+      <google-signin id="gs"
+                     client-id="751967381809-og5g0ofk608dojddcn0ikovekfetughn.apps.googleusercontent.com"
+                     cookie-policy="none"
+                     on-google-signin-success="googleSigninSuccess"
+      ></google-signin>
+      <snw-ajax id="g" cmd="/auth/google" body="{{gBody}}" on-response="gResp" on-error="gErr"></snw-ajax>
+    </div>
+  </template>
+
+  <script>
+    (function(){
+      'use strict';
+      Polymer({
+        is: 'snw-external-providers'
+      });
+    })();
+  </script>
+</dom-module>

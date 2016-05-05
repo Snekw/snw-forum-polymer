@@ -1,0 +1,70 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../elements/helpers/snw-ajax.html">
+<link rel="import" href="../../elements/helpers/snw-ls.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="snw-logout">
+  <!--<style include="dark-theme"></style>-->
+  <template>
+    <snw-ls id="sals"></snw-ls>
+    <snw-ajax id="logoutAjax" cmd="/auth/logout" on-response="handleLogout" on-error="handleLogoutError"></snw-ajax>
+
+    <paper-button on-tap="logout">Logout</paper-button>
+    <!-- Dialog -->
+    <paper-dialog id="dialog" with-backdrop="true" on-iron-overlay-opened="dialogClose" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2>{{_dialogMessage}}</h2>
+    </paper-dialog>
+  </template>
+  <script>
+    (function () {
+      'use strict';
+      Polymer({
+        is: 'snw-logout',
+
+        properties:{
+          //Public
+
+          /*******************************************/
+          //Private
+          _dialogMessage:{
+            type: String,
+            value: 'Welcome'
+          },
+
+          /*******************************************/
+          //Methods
+
+          logout: function () {
+            this.$.sals.reload();
+            if(this._jwt.length > 0)
+            {
+              this.$.logoutAjax.generateRequest();
+            }
+          },
+          
+          handleLogout: function(e){
+            window.location = '/#/home';
+            this.$.sals.deleteJwt();
+            this.showDialog('You have logged out!');
+          },
+
+          handleLogoutError: function(e){
+            window.location = '/#/home';
+            this.$.sals.deleteJwt();
+            this.showDialog('Errors while logging out! Don\'t worry. You have been logged out. \r\nSome errors on server side.');
+          },
+
+          showDialog: function(message){
+            this._dialogMessage = message;
+            this.$.dialog.open();
+          },
+
+          dialogClose: function(){
+            setTimeout(this.$.dialog.close(), 3000);
+          }
+        }
+      });
+    })();
+  </script>
+</dom-module>

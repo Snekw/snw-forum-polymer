@@ -25,8 +25,11 @@
   <meta name="msapplication-TileColor" content="#3372DF">
   <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
 
-  <link rel="stylesheet" href="styles/main.css">
   <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
     body.loading #splash {
       opacity: 1;
     }
@@ -56,42 +59,50 @@
       background-color: #424b4b;
     }
   </style>
+
+  <link rel="import" href="elements/snw-forum-app.html" async>
 </head>
-<body class="loading fullbleed">
+<body class="loading">
 <!-- build:remove -->
 <span id="browser-sync-binding"></span>
-<!-- endbuild -->
+<!-- /build -->
 
 <div id="splash">
   <div id="splash2"></div>
 </div>
 
-<template is="dom-bind" id="app">
-  <snw-router></snw-router>
+<snw-forum-app></snw-forum-app>
 
-  <paper-header-panel>
-    <div class="paper-header">
-      <paper-toolbar>
-        <div class="title layout horizontal center-justified">Title</div>
-        <div class="content">
-          <snw-login></snw-login>
-        </div>
-      </paper-toolbar>
-      <paper-tabs id="tabs" fallback-selection="home" attr-for-selected="data-route" selected="{{route}}" align-bottom>
-        <paper-tab data-route="home" link><a href="#/home" class="link" tabindex="-1">Home</a></paper-tab>
-        <paper-tab data-route="about" link><a href="#/about" class="link" tabindex="-1">About</a></paper-tab>
-        <paper-tab data-route="forum" link><a href="#/forum" class="link" tabindex="-1">Forum</a></paper-tab>
-        <paper-tab data-route="servers" link><a href="#/servers" class="link" tabindex="-1">Servers</a></paper-tab>
-      </paper-tabs>
-    </div>
-    <div class="fit">
-      <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend enim in nisl euismod fermentum. Pellentesque volutpat est vel convallis euismod. Vestibulum a odio libero. Nullam dignissim nulla urna, sed semper mauris lacinia sed. Donec malesuada magna a dolor ultrices, id ultrices dolor laoreet. Praesent nec tincidunt lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum venenatis orci id lorem commodo auctor.</div>
-    </div>
-  </paper-header-panel>
+<script id="loader">
+  // Load webcomponentsjs polyfill if browser does not support native webcomponents
+  (function() {
+    'use strict';
+    var onload = function() {
+      // For native Imports, manually fire WCR so user code
+      // can use the same code path for native and polyfill'd imports.
+      if (!window.HTMLImports) {
+        document.dispatchEvent(
+            new CustomEvent('WebComponentsReady', {bubbles: true}));
+      }
+      //Remove self after loading
+      var loader = document.getElementById('loader');
+      loader.parentNode.removeChild(loader);
+    };
 
-  <snw-toast id="stoast"></snw-toast>
-</template>
-
-<script src="scripts/app.js"></script>
+    var webComponentsSupported = (
+    'registerElement' in document
+    && 'import' in document.createElement('link')
+    && 'content' in document.createElement('template'));
+    if (!webComponentsSupported) {
+      var script = document.createElement('script');
+      script.async = true;
+      script.src = 'bower_components/webcomponentsjs/webcomponents-lite.min.js';
+      script.onload = onload;
+      document.head.appendChild(script);
+    } else {
+      onload();
+    }
+  })();
+</script>
 </body>
 </html>
