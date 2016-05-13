@@ -12,5 +12,7 @@ bower_components
 .nogit
 
 src/styles/**/*
-!src/styles/src
+!src/styles/src/**/*.scss
+!src/styles/src/**/*.css
+!src/styles/src/**/*.html
 !src/styles/styling.md
