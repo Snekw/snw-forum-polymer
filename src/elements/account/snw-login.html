@@ -2,15 +2,17 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../../elements/helpers/snw-ajax.html">
 <link rel="import" href="../../elements/helpers/snw-ls.html">
+<link rel="import" href="../../elements/helpers/snw-settings.html">
 
 <dom-module id="snw-login">
   <!--<style include="dark-theme">-->
   <style>
     paper-dialog {
-      background-color: var(--dark-primary-color);
-      color: var(--dark-theme-text-color);
+      background-color: var(--snw-main-color);
+      color: var(--snw-text-color);
     }
 
     paper-dialog paper-button{
@@ -19,17 +21,18 @@
     }
 
     .error {
-      color: var(--theme-error-color);
+      color: var(--snw-error-color);
     }
 
     :host{
-      --paper-input-container-invalid-color: var(--paper-progress-secondary-color);
+      --paper-input-container-invalid-color: var(--snw-accent-color);
     }
   </style>
 
   <template>
     <snw-jwt-helper id="jwtHelper"></snw-jwt-helper>
-    <snw-ls id="sals"></snw-ls>
+    <snw-ls id="ls"></snw-ls>
+    <snw-settings id="conf"></snw-settings>
     <paper-button data-dialog="login" on-tap="openDialog">Login</paper-button>
     <paper-button data-dialog="register" on-tap="openDialog">Register</paper-button>
 
@@ -40,16 +43,14 @@
         <paper-button data-dialog="login" data-next="register" on-tap="closeDialog">Don't have an account? Register</paper-button>
       </div>
 
-      <template is="dom-if" if="{{loginError}}" >
-        <span style="color: red">{{loginErrorMessage}}</span>
-      </template>
+      <div class="error" hidden="{{!_formError}}">{{_fromErrorMessage}}</div>
 
       <form is="iron-form"
             id="login-form"
             method="post"
-            action="http://localhost:443/auth/default"
-            on-iron-form-response="handleLoginResponse"
-            on-iron-form-error="handleLoginError">
+            action="{{_getApiUrl('/auth/default')}}"
+            on-iron-form-response="handleFormResponse"
+            on-iron-form-error="handleFormError">
         <paper-input name="email"
                      label="Email"
                      auto-validate
@@ -85,30 +86,26 @@
         <paper-button data-dialog="register" data-next="login" on-tap="closeDialog">Already have an account? Login</paper-button>
       </div>
 
-      <template is="dom-if" if="{{registerError}}" >
-        <template is="dom-if" if="{{registerErrorEmail}}">
-          <span class="error">Email already used</span>
-        </template>
-        <template is="dom-if" if="{{registerErrorUsername}}">
-          <span class="error">Username already used</span>
-        </template>
-      </template>
+      <div class="error" hidden="{{!_formError}}">{{_fromErrorMessage}}</div>
+      <div class="error" hidden="{{!_rEmailError}}">Email already used</div>
+      <div class="error" hidden="{{!_rUsernameError}}">Username already used</div>
 
       <form is="iron-form"
             id="register-form"
             method="post"
-            action="http://localhost:443/auth/default/r"
-            on-iron-form-response="handleRegisterResponse"
-            on-iron-form-error="handleRegisterError">
+            action="{{_getApiUrl('/auth/default/r')}}"
+            on-iron-form-response="handleFormResponse"
+            on-iron-form-error="handleFormError">
 
         <paper-input name="userName"
                      label="Username"
                      value="{{sUsername}}"
                      on-change="checkValidity"
                      required
+                     pattern="^[a-zA-Z0-9_-]{4,40}$"
                      minlength="4"
-                     maxlength="64"
-                     error-message="Username is required! Min. 4 characters. Max. 64 Characters."
+                     maxlength="40"
+                     error-message="Username is required! Length 4 - 40 Characters. a-zA-Z0-9_-"
         ></paper-input>
 
         <paper-input name="email"
@@ -126,9 +123,8 @@
                      auto-validate
                      required
                      minlength="6"
-                     maxlength="255"
                      value="{{sPw}}"
-                     error-message="Password is required! Min. 6 characters. Max. 255 Characters."
+                     error-message="Password is required! Min. 6 characters"
         ></paper-input>
         <paper-input label="Password again"
                      type="password"
@@ -136,7 +132,6 @@
                      pattern="{{sPw}}"
                      required
                      minlength="6"
-                     maxlength="255"
                      error-message="Password doesn't match!"
         ></paper-input>
 
@@ -153,6 +148,10 @@
       </div>
     </paper-dialog>
 
+    <paper-dialog id="welcome" on-iron-overlay-opened="welcomeDialogClose" on-iron-overlay-closed="fireLogin" with-backdrop="true" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2>Welcome <span style="text-transform: capitalize">[[_userName]]</span>!</h2>
+    </paper-dialog>
+
   </template>
 
   <script>
@@ -162,9 +161,30 @@
         is: 'snw-login',
 
         properties: {
+          _userName:{
+            type: String,
+            value: ''
+          },
 
+          _conf: {
+            type: Object,
+            value: function(){
+              return document.getElementById('conf');
+            }
+          },
+          _validityCheckInProgress: Boolean,
+          _rEmailError:{
+            type: Boolean,
+            value: false
+          },
+          _rUsernameError:{
+            type: Boolean,
+            value: false
+          }
+        },
 
-          _validityCheckInProgress: Boolean
+        _getApiUrl: function(s){
+          return this.$.conf.apiUrl + s;
         },
 
         openDialog: function(e){
@@ -192,8 +212,12 @@
         },
 
         submitForm: function (e) {
-          this.loginError = false;
-          this.registerError = false;
+          //Prevent the form from being submitted if user is already logged in.
+          if(this.$.ls.get('jwt').length > 3){
+            return;
+          }
+
+          this._formError = false;
           var id = e.target;
           id = id.getAttribute('data-form');
           this.$$('#'+id+'-form').submit();
@@ -205,6 +229,18 @@
             data: e.target.value
           };
           if(e.target.validate() && !this._validityCheckInProgress){
+            //Reset the error flag for the type we are cheking the validity
+            switch(this._validity.type){
+              case 'email':
+                this._rEmailError = false;
+                break;
+              case 'userName':
+                this._rUsernameError = false;
+                break;
+              default:
+                break;
+            }
+
             this._validityCheckInProgress = true;
             this.$.validityCheck.generateRequest();
             this._validity.element = e.target;
@@ -214,8 +250,51 @@
         handleValidityCheckResponse: function (e) {
           this._validityCheckInProgress = false;
 
-          if(e.detail.detail)
-            this._validity.element.invalid = !e.detail.detail.response.data.isValid;
+          if(e.detail.detail){
+            var isValid = e.detail.detail.response.data.isValid;
+            this._validity.element.invalid = !isValid;
+
+            if(!isValid){
+              switch(e.detail.detail.response.data.type){
+                case 'email':
+                  this._rEmailError = true;
+                  break;
+                case 'userName':
+                  this._rUsernameError = true;
+                  break;
+                default:
+                  this._rEmailError = false;
+                  this._rUsernameError = false;
+              }
+            }
+          }
+        },
+        
+        handleFormResponse: function(e){
+          var response = e.detail.response;
+          this.$.ls.set('account', response.data.user);
+          this.$.ls.set('jwt', response.data.jwt);
+          this._userName = response.data.user.userName;
+          this.$.welcome.open();
+          this.$.register.close();
+          this.$.login.close();
+        },
+        
+        handleFormError: function(e){
+          var response = e.detail.response;
+          this._formErrorMessage = response.data.reason.reason;
+          this._formError = true;
+        },
+
+        welcomeDialogClose: function(){
+          var l = this.$.welcome;
+          setTimeout(function(){
+            l.close();
+          }, 3000);
+        },
+
+        fireLogin: function(){
+          this.fire('login');
         }
       });
     })();

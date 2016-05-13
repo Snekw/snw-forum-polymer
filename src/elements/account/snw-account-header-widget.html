@@ -9,15 +9,11 @@
   <!--<style include="dark-theme"></style>-->
   <template>
     <snw-jwt-helper id="jwtHelper"></snw-jwt-helper>
-    <snw-ls account="{{_account}}" jwt="{{_jwt}}"></snw-ls>
+    <snw-ls id="ls" on-ls-change="handleLsChange"></snw-ls>
 
-    <template is="dom-if" if="{{_isLoggedIn}}">
-      <paper-button>Account</paper-button>
-      <snw-logout></snw-logout>
-    </template>
-    <template is="dom-if" if="{{!_isLoggedIn}}">
-      <snw-login></snw-login>
-    </template>
+    <paper-button hidden="{{!_isLoggedIn}}">Account</paper-button>
+    <snw-logout on-logout="handleLogout" hidden="{{!_isLoggedIn}}"></snw-logout>
+    <snw-login on-login="handleLogin" hidden="{{_isLoggedIn}}"></snw-login>
   </template>
 
   <script>
@@ -28,8 +24,23 @@
         properties:{
           _isLoggedIn: {
             type: Boolean,
+            notify: true,
             value: false
           }
+        },
+
+        handleLsChange: function(e){
+          if(e.detail.type === 'jwt'){
+            this._isLoggedIn = (e.detail.e.length > 0);
+          }
+        },
+
+        handleLogin: function(){
+          this._isLoggedIn = true;
+        },
+        
+        handleLogout: function(){
+          this._isLoggedIn = false;
         }
       });
     })();

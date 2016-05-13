@@ -2,12 +2,21 @@
 <link rel="import" href="../bower_components/paper-header-panel/paper-header-panel.html">
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animatable.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="account/snw-account-header-widget.html">
+<link rel="import" href="routing/snw-router.html">
+<link rel="import" href="routing/snw-protected-routes.html">
 <link rel="import" href="../styles/dark-theme/dark-theme.html">
 
 <dom-module id="snw-forum-app">
   <template>
+    <snw-router page="{{page}}"></snw-router>
+    <snw-protected-routes ></snw-protected-routes>
+
     <style include="iron-flex iron-positioning iron-flex-alignment dark-theme"></style>
     <div id="mainContainer" class="fullbleed">
       <paper-header-panel>
@@ -18,15 +27,45 @@
               <snw-account-header-widget></snw-account-header-widget>
             </div>
           </paper-toolbar>
-          <paper-tabs id="tabs" fallback-selection="404" attr-for-selected="data-route" selected="{{route}}" align-bottom>
-            <paper-tab data-route="home" link><a href="#/home" class="link" tabindex="-1">Home</a></paper-tab>
-            <paper-tab data-route="about" link><a href="#/about" class="link" tabindex="-1">About</a></paper-tab>
-            <paper-tab data-route="forum" link><a href="#/forum" class="link" tabindex="-1">Forum</a></paper-tab>
-            <paper-tab data-route="servers" link><a href="#/servers" class="link" tabindex="-1">Servers</a></paper-tab>
+          <paper-tabs id="tabs" fallback-selection="404" attr-for-selected="data-page" selected="{{page}}" align-bottom>
+            <paper-tab data-page="home" link><a href="#/home" class="link" tabindex="-1">Home</a></paper-tab>
+            <paper-tab data-page="about" link><a href="#/about" class="link" tabindex="-1">About</a></paper-tab>
+            <paper-tab data-page="forum" link><a href="#/forum" class="link" tabindex="-1">Forum</a></paper-tab>
+            <paper-tab data-page="servers" link><a href="#/servers" class="link" tabindex="-1">Servers</a></paper-tab>
           </paper-tabs>
         </div>
         <div class="fit">
-          <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend enim in nisl euismod fermentum. Pellentesque volutpat est vel convallis euismod. Vestibulum a odio libero. Nullam dignissim nulla urna, sed semper mauris lacinia sed. Donec malesuada magna a dolor ultrices, id ultrices dolor laoreet. Praesent nec tincidunt lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum venenatis orci id lorem commodo auctor.</div>
+          <neon-animated-pages attr-for-selected="data-page"
+                               selected="[[page]]"
+                               entry-animation="slide-from-left-animation"
+                               exit-animation="slide-left-animation"
+                               fallback-selection="404">
+            <neon-animatable data-page="home" tabindex="-1">
+              <paper-material elevation="1">
+                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend enim in nisl euismod fermentum. Pellentesque volutpat est vel convallis euismod. Vestibulum a odio libero. Nullam dignissim nulla urna, sed semper mauris lacinia sed. Donec malesuada magna a dolor ultrices, id ultrices dolor laoreet. Praesent nec tincidunt lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum venenatis orci id lorem commodo auctor.</div>
+              </paper-material>
+            </neon-animatable>
+            <neon-animatable data-page="about" tabindex="-1">
+              <paper-material elevation="1">
+                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend enim in nisl euismod fermentum. Pellentesque volutpat est vel convallis euismod. Vestibulum a odio libero. Nullam dignissim nulla urna, sed semper mauris lacinia sed. Donec malesuada magna a dolor ultrices, id ultrices dolor laoreet. Praesent nec tincidunt lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum venenatis orci id lorem commodo auctor.</div>
+              </paper-material>
+            </neon-animatable>
+            <neon-animatable data-page="forum" tabindex="-1">
+              <paper-material elevation="1">
+                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend enim in nisl euismod fermentum. Pellentesque volutpat est vel convallis euismod. Vestibulum a odio libero. Nullam dignissim nulla urna, sed semper mauris lacinia sed. Donec malesuada magna a dolor ultrices, id ultrices dolor laoreet. Praesent nec tincidunt lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum venenatis orci id lorem commodo auctor.</div>
+              </paper-material>
+            </neon-animatable>
+            <neon-animatable data-page="servers" tabindex="-1">
+              <paper-material elevation="1">
+                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend enim in nisl euismod fermentum. Pellentesque volutpat est vel convallis euismod. Vestibulum a odio libero. Nullam dignissim nulla urna, sed semper mauris lacinia sed. Donec malesuada magna a dolor ultrices, id ultrices dolor laoreet. Praesent nec tincidunt lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum venenatis orci id lorem commodo auctor.</div>
+              </paper-material>
+            </neon-animatable>
+            <neon-animatable data-page="404" tabindex="-1">
+              <paper-material elevation="1">
+                404 Not found. Go to home page <a href="#/home">Click here</a>
+              </paper-material>
+            </neon-animatable>
+          </neon-animated-pages>
         </div>
       </paper-header-panel>
     </div>
@@ -46,22 +85,3 @@
     })();
   </script>
 </dom-module>
-
-
-
-<!--var app = document.querySelector('#app');-->
-
-<!--app.baseUrl = '';-->
-<!--app.apiUrl = 'http://localhost:443';-->
-<!--app.webComponentSupport = webComponentsSupported;-->
-
-<!--if (window.location.port === '') {  // if production e.g. gh-pages-->
-<!--app.baseUrl = '/snw-forum-polymer';-->
-<!--}-->
-
-<!--//Make sure the styling is updated when we come back to the site-->
-<!--app.addEventListener('dom-change', function(e){-->
-<!--if(Polymer){-->
-<!--Polymer.updateStyles();-->
-<!--}-->
-<!--});-->

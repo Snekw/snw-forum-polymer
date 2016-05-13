@@ -7,12 +7,12 @@
 <dom-module id="snw-logout">
   <!--<style include="dark-theme"></style>-->
   <template>
-    <snw-ls id="sals"></snw-ls>
+    <snw-ls id="ls"></snw-ls>
     <snw-ajax id="logoutAjax" cmd="/auth/logout" on-response="handleLogout" on-error="handleLogoutError"></snw-ajax>
 
     <paper-button on-tap="logout">Logout</paper-button>
     <!-- Dialog -->
-    <paper-dialog id="dialog" with-backdrop="true" on-iron-overlay-opened="dialogClose" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+    <paper-dialog id="dialog" with-backdrop="true" on-iron-overlay-opened="dialogClose" on-iron-overlay-closed="fireLogout" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
       <h2>{{_dialogMessage}}</h2>
     </paper-dialog>
   </template>
@@ -22,47 +22,56 @@
       Polymer({
         is: 'snw-logout',
 
-        properties:{
+        properties: {
           //Public
 
           /*******************************************/
           //Private
-          _dialogMessage:{
-            type: String,
+          _dialogMessage: {
+            type : String,
             value: 'Welcome'
-          },
-
-          /*******************************************/
-          //Methods
-
-          logout: function () {
-            this.$.sals.reload();
-            if(this._jwt.length > 0)
-            {
-              this.$.logoutAjax.generateRequest();
-            }
-          },
-          
-          handleLogout: function(e){
-            window.location = '/#/home';
-            this.$.sals.deleteJwt();
-            this.showDialog('You have logged out!');
-          },
-
-          handleLogoutError: function(e){
-            window.location = '/#/home';
-            this.$.sals.deleteJwt();
-            this.showDialog('Errors while logging out! Don\'t worry. You have been logged out. \r\nSome errors on server side.');
-          },
-
-          showDialog: function(message){
-            this._dialogMessage = message;
-            this.$.dialog.open();
-          },
-
-          dialogClose: function(){
-            setTimeout(this.$.dialog.close(), 3000);
           }
+        },
+
+        /*******************************************/
+        //Methods
+
+        logout: function () {
+          if(this.$.ls.get('jwt').length > 0)
+          {
+            this.$.logoutAjax.generateRequest();
+          }
+        },
+
+        handleLogout: function(e){
+          window.location = '/#/home';
+          this.$.ls.delete('jwt');
+          this.$.ls.delete('account');
+          this.showDialog('You have logged out!');
+        },
+
+        handleLogoutError: function(e){
+          window.location = '/#/home';
+          this.$.ls.delete('jwt');
+          this.$.ls.delete('account');
+          this.showDialog('Errors while logging out! Don\'t worry. You have been logged out. \r\nSome errors on server side.');
+        },
+
+        showDialog: function(message){
+          this._dialogMessage = message;
+
+          this.$.dialog.open();
+        },
+
+        dialogClose: function(){
+          var l = this.$.dialog;
+          setTimeout(function(){
+            l.close();
+          }, 3000);
+        },
+
+        fireLogout: function(){
+          this.fire('logout');
         }
       });
     })();

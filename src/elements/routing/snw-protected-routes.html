@@ -1,0 +1,43 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="snw-route-protector.html">
+<link rel="import" href="../helpers/snw-jwt-helper.html">
+<link rel="import" href="../helpers/snw-ls.html">
+
+<dom-module id="snw-protected-routes">
+  <template>
+    <snw-jwt-helper id="jwt"></snw-jwt-helper>
+    <snw-ls id="ls"></snw-ls>
+
+    <snw-route-protector id="userEdit"></snw-route-protector>
+  </template>
+
+  <script>
+    (function(){
+      'use strict';
+      Polymer({
+        is: 'snw-protected-routes',
+
+        properties:{
+          scopes: Object
+        },
+
+        ready: function(){
+          var extractedScopes = this.$.jwt.decodeJwt(this.$.ls.get('jwt'));
+          if(!extractedScopes){
+            return;
+          }
+          extractedScopes = extractedScopes.scopes;
+          console.log(extractedScopes);
+
+          var userEdit = {
+            scopes: extractedScopes,
+            neededScopes: [['editOwn'], ['editUsers', 'z']],
+            pattern: '/user/:id/edit'
+          };
+
+          this.$.userEdit.setData(userEdit);
+        }
+      });
+    })();
+  </script>
+</dom-module>

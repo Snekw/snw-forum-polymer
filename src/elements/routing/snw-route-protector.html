@@ -1,0 +1,26 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/carbon-route/carbon-location.html">
+<link rel="import" href="../../bower_components/carbon-route/carbon-route.html">
+<link rel="import" href="../../bower_components/carbon-route/carbon-route-converter.html">
+
+
+<dom-module id="snw-route-protector">
+  <template>
+    <carbon-location route="{{_route}}" use-hash-as-path></carbon-location>
+    <carbon-location route="{{_route}}" pattern="{{_pattern}}" data="{{_data}}"  tail="{{_tail}}" active="{{_active}}"></carbon-location>
+  </template>
+
+  <script>
+    (function(){
+      'use strict';
+      Polymer({
+        is: 'snw-route-protector',
+        
+        setData: function(data){
+          this._pattern = data.pattern;
+
+        }
+      });
+    })();
+  </script>
+</dom-module>

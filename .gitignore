@@ -13,3 +13,4 @@ bower_components
 
 src/styles/**/*
 !src/styles/src
+!src/styles/styling.md

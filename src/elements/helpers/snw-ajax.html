@@ -6,7 +6,7 @@
 <dom-module id="snw-ajax">
   <template>
     <snw-settings id="settings"></snw-settings>
-    <snw-ls id="accountls" jwt="{{jwt}}" on-iron-localstorage-load="storageLoaded"></snw-ls>
+    <snw-ls id="ls" on-change="handleLsChange" on-iron-localstorage-load="storageLoaded"></snw-ls>
     <iron-ajax id="snwajax"
                handle-as="json"
                headers="{{headers}}"
@@ -89,10 +89,15 @@
           this.init();
         },
 
+        handleLsChange: function(e){
+          if(e.detail.type === 'jwt'){
+            this.jwt = e.detail.e;
+          }
+        },
+
         init: function () {
           //Force localstorage reload before init.
-          this.$.accountls.reload();
-          this.setAuthHeader(this.jwt || '');
+          this.setAuthHeader(this.$.ls.get('jwt') || '');
           this.setMethod(this.method || 'POST');
           this.setCmd(this.cmd || '');
           this.setUrl(this.$.settings.apiUrl + this.cmd);

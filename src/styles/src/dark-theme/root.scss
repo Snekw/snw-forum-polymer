@@ -1,17 +1,22 @@
 :root {
-  --theme-error-color: #c60e0c;
-  --default-primary-color: #3b8183;
-  --dark-primary-color: #424b4b;
-  --light-primary-color: #c5cae9;
-  --text-primary-color: #ffffff;
-  --accent-color: #ff4081;
-  --primary-background-color: #ffffff;
-  --primary-text-color: #ffffff;
-  --secondary-text-color: #ffffff;
-  --disabled-text-color: black;
-  --divider-color: #e0e0e0;
-  --paper-checkbox-checked-color: #d32f2f;
-  --paper-checkbox-checked-ink-color: #3b8183;
+
+  //Main colors
+  --snw-error-color: #d32f2f;
+  --snw-main-color: #424b4b;
+  --snw-secondary-color: #212121;
+  --snw-accent-color: #d35d41;
+  --snw-disabled-color: #171717;
+
+  //Text
+  --snw-text-color: #ffffff;
+  --snw-text-secondary-color: #f4f4f4;
+  --snw-font-main: 'Open Sans', sans-serif;
+  --snw-font-secondary: 'Roboto', sans-serif;
+  --snw-font-size-main: 12px;
+  --snw-font-size-big: 16px;
+
+  --paper-checkbox-checked-color: var(--snw-accent-color);
+  --paper-checkbox-checked-ink-color: var(--snw-main-color);
   --paper-checkbox-unchecked-color: #424b4b;
   --paper-checkbox-unchecked-ink-color: #424b4b;
   --paper-checkbox-label-color: #ffffff;

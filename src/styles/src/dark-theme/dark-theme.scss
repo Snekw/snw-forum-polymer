@@ -1,14 +1,14 @@
 @import "root";
 @import "paper";
-@import "nativeHtml";
+@import "html";
 
 #mainContainer {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  color: #ffffff;
-  background-color: #212121;
-  font-family: 'Open Sans', sans-serif;
+  color: var(--snw-text-color);
+  background-color: var(--snw-secondary-color);
+  font-family: var(--snw-font-main);
   font-weight: 400;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;

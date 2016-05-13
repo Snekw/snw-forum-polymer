@@ -1,0 +1,42 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/carbon-route/carbon-location.html">
+<link rel="import" href="../../bower_components/carbon-route/carbon-route.html">
+
+<dom-module id="snw-router">
+  <template>
+    <carbon-location route="{{_route}}" use-hash-as-path></carbon-location>
+    <carbon-route route="{{_route}}" pattern="/:page" data="{{_page}}" tail="{{_tail}}"></carbon-route>
+    <div>[[page]]</div>
+  </template>
+
+  <script>
+    (function(){
+      'use strict';
+      Polymer({
+        is: 'snw-router',
+
+        properties:{
+          page:{
+            type: String,
+            notify: true,
+            value: function(){return "";}
+          },
+
+          _page:{
+            type: Object,
+            notify: true,
+            observer: '_pageChanged'
+          }
+        },
+        
+        _pageChanged: function(_page){
+          if(!_page.page){
+            this.page = 'home'
+          }else{
+            this.page = _page.page;
+          }
+        }
+      });
+    })();
+  </script>
+</dom-module>
