@@ -11,8 +11,6 @@ bower_components
 .tmp
 .nogit
 
-src/styles/**/*
-!src/styles/src/**/*.scss
-!src/styles/src/**/*.css
-!src/styles/src/**/*.html
+src/styles/dark-theme
+src/styles/src/**/*.css
 !src/styles/styling.md
