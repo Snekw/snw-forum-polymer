@@ -27,18 +27,20 @@
         ready: function(){
           var extractedScopes = this.$.jwt.decodeJwt(this.$.ls.getLs('jwt'));
           if(!extractedScopes){
-            return;
+            extractedScopes = [[]];
+          }else{
+            extractedScopes = extractedScopes.scopes;
           }
-          extractedScopes = extractedScopes.scopes;
           console.log(extractedScopes);
 
-          var userEdit = {
+          var userSettings = {
             scopes: extractedScopes,
-            neededScopes: [['editOwn'], ['editUsers', 'z']],
-            pattern: '/user/:id/edit'
+            allowSelf: true,
+            neededScopes: [['editUsers']],
+            pattern: '/user/:id/settings'
           };
 
-          this.$.userEdit.setData(userEdit);
+          this.$.userEdit.setData(userSettings);
         }
       });
     })();
