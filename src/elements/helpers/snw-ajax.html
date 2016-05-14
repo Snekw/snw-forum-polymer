@@ -97,7 +97,7 @@
 
         init: function () {
           //Force localstorage reload before init.
-          this.setAuthHeader(this.$.ls.get('jwt') || '');
+          this.setAuthHeader(this.$.ls.getLs('jwt') || '');
           this.setMethod(this.method || 'POST');
           this.setCmd(this.cmd || '');
           this.setUrl(this.$.settings.apiUrl + this.cmd);

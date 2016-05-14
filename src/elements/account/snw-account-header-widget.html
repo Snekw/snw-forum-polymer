@@ -4,10 +4,11 @@
 <link rel="import" href="snw-login.html">
 <link rel="import" href="snw-logout.html">
 <link rel="import" href="../helpers/snw-ls.html">
+<link rel="import" href="../../styles/dark-theme/dark-theme.html">
 
 <dom-module id="snw-account-header-widget">
-  <!--<style include="dark-theme"></style>-->
   <template>
+    <style include="dark-theme"></style>
     <snw-jwt-helper id="jwtHelper"></snw-jwt-helper>
     <snw-ls id="ls" on-ls-change="handleLsChange"></snw-ls>
 

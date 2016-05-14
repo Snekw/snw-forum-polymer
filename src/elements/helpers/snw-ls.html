@@ -5,11 +5,13 @@
 <dom-module id="snw-ls">
   <template>
     <snw-jwt-helper id="jwt"></snw-jwt-helper>
-    <iron-localstorage id="lsjwt" name="jwt-storage"
+    <iron-localstorage id="lsjwt"
+                       name="jwt-storage"
                        value="{{_jwt}}"
                        on-iron-localstorage-load-empty="initializeDefault2"
     ></iron-localstorage>
-    <iron-localstorage id="lsaccount" name="account-storage"
+    <iron-localstorage id="lsaccount"
+                       name="account-storage"
                        value="{{_account}}"
                        on-iron-localstorage-load-empty="initializeDefault"
     ></iron-localstorage>
@@ -73,25 +75,26 @@
           this.fire('ls-change', e);
         },
 
-        delete: function(type){
+        deleteLs: function(type){
           var _type = '_' + type;
           if(!this[_type]) return;
 
           this[_type] = "";
         },
 
-        set: function(type, value){
+        setLs: function(type, value){
           var _type = '_' + type;
           if(!this[_type]){
-            this[_type] = value;
+            this.set(_type, value);
           }
         },
 
-        get: function(type){
+        getLs: function(type){
           var _type = '_' + type;
-          if(this[_type]){
-            this.$['ls'+type].reload();
-            return this[_type];
+          this.$['ls'+type].reload();
+          var ret = this[_type];
+          if(ret){
+            return ret;
           }
           return '';
         }

@@ -1,74 +1,11 @@
-
-paper-toolbar a, paper-toolbar a:hover, paper-toolbar a:active, paper-toolbar a:visited, paper-toolbar a:focus {
-  color: #bdced7;
-}
-
-paper-button.primary, paper-button.btn-primary, paper-button[primary] {
-  color: #d32f2f;
-}
-
-paper-button.primary[raised], paper-button.btn-primary[raised], paper-button[primary][raised] {
-  background-color: #d32f2f; color: #fff;
-}
-
-paper-button.secondary, paper-button.btn-secondary, paper-button[secondary] {
-  color: #d50000;
-}
-
-paper-button.secondary[raised], paper-button.btn-secondary[raised], paper-button[secondary][raised] {
-  background-color: #d50000; color: #fff;
-}
-paper-button.success, paper-button.btn-success, paper-button[success] {
-  color: #8bc34a;
-}
-
-paper-button.success[raised], paper-button.btn-success[raised], paper-button[success][raised] {
-  background-color: #8bc34a; color: #fff;
-}
-paper-button.info, paper-button.btn-info, paper-button[info] {
-  color: #9575cd;
-}
-paper-button.info[raised], paper-button.btn-info[raised], paper-button[info][raised] {
-  background-color: #9575cd;
-  color: #2d233e;
-}
-
-paper-button.warning, paper-button.btn-warning, paper-button[warning] {
-  color: #fadd60;
-}
-
-paper-button.warning[raised], paper-button.btn-warning[raised], paper-button[warning][raised] {
-  background-color: #fadd60;
-  color: #4b421d;
-}
-
-paper-button.error, paper-button.btn-error, paper-button[error] {
-  color: #ff7043;
-}
-
-paper-button.error[raised], paper-button.btn-error[raised], paper-button[error][raised] {
-  background-color: #ff7043;
-  color: #4d2214;
-}
-
-paper-button.link, paper-button.btn-link, paper-button[link] {
-  text-decoration: underline;
-}
-
-paper-button[raised] {
-  color: #ffffff;
-}
-
-paper-button[disabled] {
-  color: black !important;
-  background: #4e5151 !important;
+paper-button {
+  color: var(--snw-text-color);
+  background: var(--snw-main-color);
 }
 
 paper-dialog {
-  color: #ffffff;
-  background-color: #212121;
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 400;
+  background-color: var(--snw-main-color);
+  color: var(--snw-text-color);
 }
 
 paper-dialog h1, paper-dialog h2, paper-dialog h3, paper-dialog h4, paper-dialog h5, paper-dialog h6 {
@@ -81,6 +18,7 @@ paper-tabs {
   background-color: #424b4b;
   color: #d7d6d0;
 }
+
 .link {
   @apply(--layout-horizontal);
   @apply(--layout-center-center);

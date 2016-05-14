@@ -3,10 +3,12 @@
 <link rel="import" href="../../elements/helpers/snw-ls.html">
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../styles/dark-theme/dark-theme.html">
 
 <dom-module id="snw-logout">
   <!--<style include="dark-theme"></style>-->
   <template>
+    <style include="dark-theme"></style>
     <snw-ls id="ls"></snw-ls>
     <snw-ajax id="logoutAjax" cmd="/auth/logout" on-response="handleLogout" on-error="handleLogoutError"></snw-ajax>
 
@@ -37,7 +39,7 @@
         //Methods
 
         logout: function () {
-          if(this.$.ls.get('jwt').length > 0)
+          if(this.$.ls.getLs('jwt').length > 0)
           {
             this.$.logoutAjax.generateRequest();
           }
@@ -45,15 +47,15 @@
 
         handleLogout: function(e){
           window.location = '/#/home';
-          this.$.ls.delete('jwt');
-          this.$.ls.delete('account');
+          this.$.ls.deleteLs('jwt');
+          this.$.ls.deleteLs('account');
           this.showDialog('You have logged out!');
         },
 
         handleLogoutError: function(e){
           window.location = '/#/home';
-          this.$.ls.delete('jwt');
-          this.$.ls.delete('account');
+          this.$.ls.deleteLs('jwt');
+          this.$.ls.deleteLs('account');
           this.showDialog('Errors while logging out! Don\'t worry. You have been logged out. \r\nSome errors on server side.');
         },
 

@@ -6,26 +6,16 @@
 <link rel="import" href="../../elements/helpers/snw-ajax.html">
 <link rel="import" href="../../elements/helpers/snw-ls.html">
 <link rel="import" href="../../elements/helpers/snw-settings.html">
+<link rel="import" href="../../styles/dark-theme/dark-theme.html">
 
 <dom-module id="snw-login">
-  <!--<style include="dark-theme">-->
-  <style>
-    paper-dialog {
-      background-color: var(--snw-main-color);
-      color: var(--snw-text-color);
-    }
-
-    paper-dialog paper-button{
-      color: var(--dark-theme-text-color);
-      text-transform: none;
+  <style include="dark-theme">
+    paper-dialog h2 {
+      text-align: left;
     }
 
     .error {
       color: var(--snw-error-color);
-    }
-
-    :host{
-      --paper-input-container-invalid-color: var(--snw-accent-color);
     }
   </style>
 
@@ -40,7 +30,10 @@
     <paper-dialog style="width: 400px;" id="login" with-backdrop="true" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
       <h2>Login</h2>
       <div class="buttons">
-        <paper-button data-dialog="login" data-next="register" on-tap="closeDialog">Don't have an account? Register</paper-button>
+        <div>
+          Don't have an account?
+          <paper-button data-dialog="login" data-next="register" on-tap="closeDialog" raised>Register</paper-button>
+        </div>
       </div>
 
       <div class="error" hidden="{{!_formError}}">{{_fromErrorMessage}}</div>
@@ -83,7 +76,10 @@
     <paper-dialog style="width: 400px;" id="register" with-backdrop="true" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
       <h2>Register</h2>
       <div class="buttons">
-        <paper-button data-dialog="register" data-next="login" on-tap="closeDialog">Already have an account? Login</paper-button>
+        <div>
+          Already have an account?
+          <paper-button data-dialog="register" data-next="login" on-tap="closeDialog" raised>Login</paper-button>
+        </div>
       </div>
 
       <div class="error" hidden="{{!_formError}}">{{_fromErrorMessage}}</div>
@@ -213,7 +209,7 @@
 
         submitForm: function (e) {
           //Prevent the form from being submitted if user is already logged in.
-          if(this.$.ls.get('jwt').length > 3){
+          if(this.$.ls.getLs('jwt').length > 3){
             return;
           }
 
@@ -272,8 +268,8 @@
         
         handleFormResponse: function(e){
           var response = e.detail.response;
-          this.$.ls.set('account', response.data.user);
-          this.$.ls.set('jwt', response.data.jwt);
+          this.$.ls.setLs('account', response.data.user);
+          this.$.ls.setLs('jwt', response.data.jwt);
           this._userName = response.data.user.userName;
           this.$.welcome.open();
           this.$.register.close();
