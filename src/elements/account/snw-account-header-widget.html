@@ -1,9 +1,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../helpers/snw-jwt-helper.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="snw-login.html">
 <link rel="import" href="snw-logout.html">
+<link rel="import" href="snw-account-drop.html">
 <link rel="import" href="../helpers/snw-ls.html">
+<link rel="import" href="../helpers/snw-jwt-helper.html">
 <link rel="import" href="../../styles/dark-theme/dark-theme.html">
 
 <dom-module id="snw-account-header-widget">
@@ -12,7 +13,8 @@
     <snw-jwt-helper id="jwtHelper"></snw-jwt-helper>
     <snw-ls id="ls" on-ls-change="handleLsChange"></snw-ls>
 
-    <paper-button hidden="{{!_isLoggedIn}}">Account</paper-button>
+    <paper-button hidden="{{!_isLoggedIn}}" on-tap="toggleDrop">{{_account.userName}}</paper-button>
+    <snw-account-drop id="drop"></snw-account-drop>
     <snw-logout on-logout="handleLogout">
       <paper-button hidden="{{!_isLoggedIn}}">Logout</paper-button>
     </snw-logout>
@@ -28,11 +30,21 @@
       Polymer({
         is: 'snw-account-header-widget',
         properties:{
+          _account: {
+            type: Object,
+            notify: true,
+            value: {}
+          },
+
           _isLoggedIn: {
             type: Boolean,
             notify: true,
             value: false
           }
+        },
+
+        ready: function(){
+          this.set('_account', this.$.ls.getLs('account'));
         },
 
         handleLsChange: function(e){
@@ -42,11 +54,16 @@
         },
 
         handleLogin: function(){
+          this.set('_account', this.$.ls.getLs('account'));
           this._isLoggedIn = true;
         },
         
         handleLogout: function(){
           this._isLoggedIn = false;
+        },
+        
+        toggleDrop: function(e){
+          this.$.drop.toggle();
         }
       });
     })();

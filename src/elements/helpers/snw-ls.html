@@ -7,12 +7,12 @@
     <snw-jwt-helper id="jwt"></snw-jwt-helper>
     <iron-localstorage id="lsjwt"
                        name="jwt-storage"
-                       value="{{_jwt}}"
+                       value="{{jwt}}"
                        on-iron-localstorage-load-empty="initializeDefault2"
     ></iron-localstorage>
     <iron-localstorage id="lsaccount"
                        name="account-storage"
-                       value="{{_account}}"
+                       value="{{account}}"
                        on-iron-localstorage-load-empty="initializeDefault"
     ></iron-localstorage>
   </template>
@@ -32,7 +32,7 @@
           /**
            * Account stored in localstorage
            */
-          _account:{
+          account:{
             type: Object,
             notify: true,
             observer: '_accountChanged'
@@ -40,7 +40,7 @@
           /**
            * Jwt stored in localstorage
            */
-          _jwt:{
+          jwt:{
             type: String,
             notify: true,
             observer: '_jwtChanged'
@@ -48,11 +48,11 @@
         },
 
         initializeDefault: function () {
-          this._account = {};
+          this.account = {};
         },
 
         initializeDefault2: function () {
-          this._jwt = "";
+          this.jwt = "";
         },
 
         _accountChanged: function(e){
@@ -76,23 +76,20 @@
         },
 
         deleteLs: function(type){
-          var _type = '_' + type;
-          if(!this[_type]) return;
+          if(!this[type]) return;
 
-          this[_type] = "";
+          this[type] = "";
         },
 
         setLs: function(type, value){
-          var _type = '_' + type;
-          if(!this[_type]){
-            this.set(_type, value);
+          if(!this[type]){
+            this.set(type, value);
           }
         },
 
         getLs: function(type){
-          var _type = '_' + type;
           this.$['ls'+type].reload();
-          var ret = this[_type];
+          var ret = this[type];
           if(ret){
             return ret;
           }

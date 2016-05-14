@@ -15,8 +15,17 @@ paper-dialog h1, paper-dialog h2, paper-dialog h3, paper-dialog h4, paper-dialog
 }
 
 paper-tabs {
-  background-color: #424b4b;
-  color: #d7d6d0;
+  background-color: var(--snw-main-color);
+  color: var(--snw-text-color);
+}
+
+paper-listbox {
+  background-color: var(--snw-main-color);
+  color: var(--snw-text-color);
+
+  :hover {
+    background-color: var(--snw-accent-color);
+  }
 }
 
 .link {

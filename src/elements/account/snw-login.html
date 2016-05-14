@@ -276,7 +276,12 @@
           this.$.ls.setLs('account', response.data.user);
           this.$.ls.setLs('jwt', response.data.jwt);
           this._userName = response.data.user.userName;
-          this.fire('login');
+
+          var t = this;
+          setTimeout(function(){
+            //Small delay is needed so we get correct values elsewhere on the app
+            t.fire('login');
+          }, 100);
           this.$.welcome.open();
           this.$.register.close();
           this.$.login.close();

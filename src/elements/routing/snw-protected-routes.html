@@ -8,7 +8,7 @@
     <snw-jwt-helper id="jwt"></snw-jwt-helper>
     <snw-ls id="ls"></snw-ls>
 
-    <snw-route-protector id="userEdit"></snw-route-protector>
+    <snw-route-protector id="userEdit" route="[[route]]"></snw-route-protector>
   </template>
 
   <script>
@@ -18,11 +18,14 @@
         is: 'snw-protected-routes',
 
         properties:{
-          scopes: Object
+          route:{
+            type: Object,
+            notify: true
+          }
         },
 
         ready: function(){
-          var extractedScopes = this.$.jwt.decodeJwt(this.$.ls.get('jwt'));
+          var extractedScopes = this.$.jwt.decodeJwt(this.$.ls.getLs('jwt'));
           if(!extractedScopes){
             return;
           }

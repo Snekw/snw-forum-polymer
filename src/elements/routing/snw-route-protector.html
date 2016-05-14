@@ -1,13 +1,11 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/carbon-route/carbon-location.html">
 <link rel="import" href="../../bower_components/carbon-route/carbon-route.html">
 <link rel="import" href="../../bower_components/carbon-route/carbon-route-converter.html">
 
 
 <dom-module id="snw-route-protector">
   <template>
-    <carbon-location route="{{_route}}" use-hash-as-path></carbon-location>
-    <carbon-location route="{{_route}}" pattern="{{_pattern}}" data="{{_data}}"  tail="{{_tail}}" active="{{_active}}"></carbon-location>
+    <carbon-route route="[[route]]" pattern="[[_pattern]]" data="{{_data}}"  tail="{{_tail}}" active="{{_active}}"></carbon-route>
   </template>
 
   <script>
@@ -15,6 +13,24 @@
       'use strict';
       Polymer({
         is: 'snw-route-protector',
+
+        properties:{
+          route:{
+            type: Object
+          },
+          _pattern:{
+            type: Object
+          },
+          _data:{
+            type: Object
+          },
+          _tail:{
+            type: Object
+          },
+          _active:{
+            type: Boolean
+          }
+        },
         
         setData: function(data){
           this._pattern = data.pattern;

@@ -1,0 +1,99 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../animations/snw-account-drop-animations.html">
+<link rel="import" href="../helpers/snw-ls.html">
+<link rel="import" href="../../styles/dark-theme/dark-theme.html">
+
+<dom-module id="snw-account-drop">
+  <style include="dark-theme">
+    paper-dialog {
+      position: fixed;
+      right: 10px;
+      top: 49px;
+      margin:0;
+      width: 200px;
+    }
+
+    paper-dialog paper-listbox {
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    paper-item a{
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .iron-selected{
+      font-weight: normal;
+    }
+  </style>
+
+  <template>
+    <snw-ls id="ls"></snw-ls>
+    <paper-dialog id="adrop"
+                  entry-animation="snw-account-drop-entry-animation"
+                  exit-animation="snw-account-drop-exit-animation"
+                  on-iron-overlay-closed="setClosed"
+    >
+      <paper-listbox style="height: 192px">
+        <paper-item on-tap="settings">Settings</paper-item>
+        <paper-item on-tap="profile">Profile</paper-item>
+        <paper-item on-tap="friends">Friends</paper-item>
+        <paper-item on-tap="inbox">Inbox</paper-item>
+      </paper-listbox>
+    </paper-dialog>
+  </template>
+
+  <script>
+    (function () {
+      'use strict';
+      Polymer({
+        is: 'snw-account-drop',
+
+        properties:{
+          _isOpen: {
+            type: Boolean,
+            value: false
+          }
+        },
+
+        toggle: function(){
+          if(this._isOpen){
+            this._isOpen = false;
+            this.$.adrop.close();
+          }else{
+            this._isOpen = true;
+            this.$.adrop.open();
+          }
+        },
+
+        setClosed: function(){
+          this._isOpen = false;
+        },
+
+        settings: function () {
+          this.goto('settings');
+        },
+        profile: function () {
+          this.goto('profile');
+        },
+        friends: function () {
+          this.goto('friends');
+        },
+        inbox: function () {
+          this.goto('inbox');
+        },
+
+        goto: function(where){
+          var user = this.$.ls.getLs('account');
+          window.location='/#/user/' + user.profileShortId + '/' + where;
+          this.$.adrop.close();
+        }
+      });
+    })();
+  </script>
+</dom-module>
