@@ -12,9 +12,10 @@
     <snw-ls id="ls"></snw-ls>
     <snw-ajax id="logoutAjax" cmd="/auth/logout" on-response="handleLogout" on-error="handleLogoutError"></snw-ajax>
 
-    <paper-button on-tap="logout">Logout</paper-button>
+    <content id="inner"></content>
+    <!--<paper-button on-tap="logout">Logout</paper-button>-->
     <!-- Dialog -->
-    <paper-dialog id="dialog" with-backdrop="true" on-iron-overlay-opened="dialogClose" on-iron-overlay-closed="fireLogout" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+    <paper-dialog id="dialog" with-backdrop="true" on-iron-overlay-opened="dialogClose" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
       <h2>{{_dialogMessage}}</h2>
     </paper-dialog>
   </template>
@@ -37,6 +38,11 @@
 
         /*******************************************/
         //Methods
+
+        ready: function(){
+          var distributed = this.getContentChildren('#inner');
+          this.listen(distributed[0], 'tap', 'logout');
+        },
 
         logout: function () {
           if(this.$.ls.getLs('jwt').length > 0)
@@ -62,6 +68,7 @@
         showDialog: function(message){
           this._dialogMessage = message;
 
+          this.fire('logout');
           this.$.dialog.open();
         },
 
@@ -70,10 +77,6 @@
           setTimeout(function(){
             l.close();
           }, 3000);
-        },
-
-        fireLogout: function(){
-          this.fire('logout');
         }
       });
     })();

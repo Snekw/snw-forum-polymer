@@ -13,8 +13,13 @@
     <snw-ls id="ls" on-ls-change="handleLsChange"></snw-ls>
 
     <paper-button hidden="{{!_isLoggedIn}}">Account</paper-button>
-    <snw-logout on-logout="handleLogout" hidden="{{!_isLoggedIn}}"></snw-logout>
-    <snw-login on-login="handleLogin" hidden="{{_isLoggedIn}}"></snw-login>
+    <snw-logout on-logout="handleLogout">
+      <paper-button hidden="{{!_isLoggedIn}}">Logout</paper-button>
+    </snw-logout>
+    <snw-login on-login="handleLogin">
+      <paper-button data-dialog="login" hidden="{{_isLoggedIn}}">Login</paper-button>
+      <paper-button data-dialog="register" hidden="{{_isLoggedIn}}">Register</paper-button>
+    </snw-login>
   </template>
 
   <script>

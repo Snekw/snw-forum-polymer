@@ -23,8 +23,7 @@
     <snw-jwt-helper id="jwtHelper"></snw-jwt-helper>
     <snw-ls id="ls"></snw-ls>
     <snw-settings id="conf"></snw-settings>
-    <paper-button data-dialog="login" on-tap="openDialog">Login</paper-button>
-    <paper-button data-dialog="register" on-tap="openDialog">Register</paper-button>
+    <content id="inner"></content>
 
     <!-- Login dialog -->
     <paper-dialog style="width: 400px;" id="login" with-backdrop="true" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
@@ -144,7 +143,7 @@
       </div>
     </paper-dialog>
 
-    <paper-dialog id="welcome" on-iron-overlay-opened="welcomeDialogClose" on-iron-overlay-closed="fireLogin" with-backdrop="true" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+    <paper-dialog id="welcome" on-iron-overlay-opened="welcomeDialogClose" with-backdrop="true" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
       <h2>Welcome <span style="text-transform: capitalize">[[_userName]]</span>!</h2>
     </paper-dialog>
 
@@ -177,6 +176,12 @@
             type: Boolean,
             value: false
           }
+        },
+
+        ready: function(){
+          var distributed = this.getContentChildren('#inner');
+          this.listen(distributed[0], 'tap', 'openDialog');
+          this.listen(distributed[1], 'tap', 'openDialog');
         },
 
         _getApiUrl: function(s){
@@ -271,6 +276,7 @@
           this.$.ls.setLs('account', response.data.user);
           this.$.ls.setLs('jwt', response.data.jwt);
           this._userName = response.data.user.userName;
+          this.fire('login');
           this.$.welcome.open();
           this.$.register.close();
           this.$.login.close();
@@ -287,10 +293,6 @@
           setTimeout(function(){
             l.close();
           }, 3000);
-        },
-
-        fireLogin: function(){
-          this.fire('login');
         }
       });
     })();
