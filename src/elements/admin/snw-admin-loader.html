@@ -31,12 +31,13 @@
         importAdmin: function(){
           //We only want to load the bundle once
           if(this._adminLoaded) return;
-          var jwt = this.$.ls.getLs('jwt');
-          if(jwt.length > 0){
-            jwt = this.decodeJwt(jwt);
-            if(!jwt.scopes) return;
-            if(!this.hasScope(jwt.scopes, 'adminTools')) return;
-          }
+          //disabled while I am developing admin board :)
+//          var jwt = this.$.ls.getLs('jwt');
+//          if(jwt.length > 0){
+//            jwt = this.decodeJwt(jwt);
+//            if(!jwt.scopes) return;
+//            if(!this.hasScope(jwt.scopes, 'adminTools')) return;
+//          }
 
           this._adminLoaded = true;
           this.importHref('/elements/snw-admin-bundle.html',function(e){

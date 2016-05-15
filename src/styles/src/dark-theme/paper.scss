@@ -28,6 +28,11 @@ paper-listbox {
   }
 }
 
+paper-drawer-panel{
+  color: var(--snw-text-color);
+  background-color: var(--snw-secondary-color);
+}
+
 .link {
   @apply(--layout-horizontal);
   @apply(--layout-center-center);

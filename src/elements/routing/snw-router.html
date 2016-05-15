@@ -26,6 +26,17 @@
             type: Object,
             notify: true,
             observer: '_pageChanged'
+          },
+
+          tail:{
+            type: Object,
+            notify: true
+          },
+
+          _tail:{
+            type: Object,
+            notify: true,
+            observer: '_tailChanged'
           }
         },
         
@@ -35,6 +46,10 @@
           }else{
             this.page = _page.page;
           }
+        },
+
+        _tailChanged: function(_tail){
+          this.tail = _tail;
         }
       });
     })();

@@ -61,6 +61,7 @@ var styleModule = function(src, dest){
       sortAttributes: true,
       sortClassName: true
     }))
+    .pipe($.replace('<style>', '<style is="custom-style">'))
     .pipe(gulp.dest(dest))
     .pipe($.size({
       title: 'styleModule'

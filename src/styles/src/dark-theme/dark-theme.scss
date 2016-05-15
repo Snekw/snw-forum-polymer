@@ -24,6 +24,11 @@
   color: var(--snw-error-color);
 }
 
+.drawer {
+  color: var(--snw-text-color);
+  background-color: var(--snw-main-color);
+}
+
 @media screen and (max-width: 480px) {
   .hideIfSmall {
     display: none;

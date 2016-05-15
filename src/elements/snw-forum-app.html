@@ -12,12 +12,16 @@
 <link rel="import" href="routing/snw-router.html">
 <link rel="import" href="../styles/dark-theme/dark-theme.html">
 <link rel="import" href="admin/snw-admin-loader.html">
+<link rel="import" href="helpers/snw-ls.html">
+<link rel="import" href="helpers/snw-permission-behavior.html">
+<link rel="import" href="helpers/snw-jwt-behavior.html">
 
 <dom-module id="snw-forum-app">
   <template>
     <style include="iron-flex iron-positioning iron-flex-alignment dark-theme"></style>
 
-    <snw-router page="{{page}}"></snw-router>
+    <snw-router page="{{page}}" tail="{{tail}}"></snw-router>
+    <snw-ls id="ls"></snw-ls>
     <snw-admin-loader></snw-admin-loader>
 
     <div id="mainContainer" class="fullbleed">
@@ -26,6 +30,9 @@
           <paper-toolbar>
             <div class="title layout horizontal center-justified">Title</div>
             <div class="content">
+              <template is="dom-if" if="{{_isAdmin}}">
+                <snw-admin-header-widget></snw-admin-header-widget>
+              </template>
               <snw-account-header-widget></snw-account-header-widget>
             </div>
           </paper-toolbar>
@@ -36,7 +43,7 @@
             <paper-tab data-page="servers" link><a href="#/servers" class="link" tabindex="-1">Servers</a></paper-tab>
           </paper-tabs>
         </div>
-        <div class="fit">
+        <div>
           <neon-animated-pages attr-for-selected="data-page"
                                selected="[[page]]"
                                entry-animation="fade-in-animation"
@@ -62,6 +69,11 @@
                 <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend enim in nisl euismod fermentum. Pellentesque volutpat est vel convallis euismod. Vestibulum a odio libero. Nullam dignissim nulla urna, sed semper mauris lacinia sed. Donec malesuada magna a dolor ultrices, id ultrices dolor laoreet. Praesent nec tincidunt lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum venenatis orci id lorem commodo auctor.</div>
               </paper-material>
             </neon-animatable>
+            <neon-animatable data-page="admin" tabindex="-1">
+              <template is="dom-if" if="{{_isAdmin}}">
+                <snw-admin-dashboard class="fit" tail="{{tail}}"></snw-admin-dashboard>
+              </template>
+            </neon-animatable>
             <neon-animatable data-page="404" tabindex="-1">
               <paper-material elevation="1">
                 404 Not found. Go to home page <a href="#/home">Click here</a>
@@ -78,7 +90,18 @@
       'use strict';
       Polymer({
         is: 'snw-forum-app',
+
+        behaviors:[
+            SNW.JwtBehavior,
+            SNW.PermissionBehavior
+        ],
+
         ready: function(){
+          this._isAdmin = true;
+
+          //Temporarily disabled
+//          this._isAdmin = this.hasScope(this.decodeJwt(this.$.ls.getLs('jwt')).scopes, 'adminTools');
+
           //Remove the splash
           var splash = document.getElementById('splash');
           splash.parentNode.removeChild(splash);
