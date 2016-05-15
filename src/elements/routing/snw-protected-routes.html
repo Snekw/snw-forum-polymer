@@ -1,11 +1,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="snw-route-protector.html">
-<link rel="import" href="../helpers/snw-jwt-helper.html">
+<link rel="import" href="../helpers/snw-jwt-behavior.html">
 <link rel="import" href="../helpers/snw-ls.html">
 
 <dom-module id="snw-protected-routes">
   <template>
-    <snw-jwt-helper id="jwt"></snw-jwt-helper>
     <snw-ls id="ls"></snw-ls>
 
     <snw-route-protector id="userEdit" route="[[route]]"></snw-route-protector>
@@ -17,6 +16,10 @@
       Polymer({
         is: 'snw-protected-routes',
 
+        behaviors:[
+            SNW.JwtBehavior
+        ],
+
         properties:{
           route:{
             type: Object,
@@ -25,7 +28,7 @@
         },
 
         ready: function(){
-          var extractedScopes = this.$.jwt.decodeJwt(this.$.ls.getLs('jwt'));
+          var extractedScopes = this.decodeJwt(this.$.ls.getLs('jwt'));
           if(!extractedScopes){
             extractedScopes = [];
           }else{
@@ -36,7 +39,7 @@
           var userSettings = {
             scopes: extractedScopes,
             allowSelf: true,
-            neededScopes: [['editUsers']],
+            neededScopes: ['editUsers'],
             pattern: '/user/:id/settings'
           };
 

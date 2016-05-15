@@ -1,0 +1,50 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../helpers/snw-ls.html">
+<link rel="import" href="../helpers/snw-jwt-behavior.html">
+
+<dom-module id="snw-admin-loader">
+  <template>
+    <snw-ls id="ls" on-ls-change="handleLsChange"></snw-ls>
+  </template>
+
+  <script>
+    (function(){
+      'use strict';
+      Polymer({
+        is: 'snw-admin-loader',
+
+        behaviors: [
+          SNW.JwtBehavior,
+          SNW.PermissionBehavior
+        ],
+
+        properties:{
+          _adminLoaded: false
+        },
+
+        handleLsChange: function(e){
+          if(e.detail.type === 'jwt'){
+            this.importAdmin();
+          }
+        },
+
+        importAdmin: function(){
+          //We only want to load the bundle once
+          if(this._adminLoaded) return;
+          var jwt = this.$.ls.getLs('jwt');
+          if(jwt.length > 0){
+            jwt = this.decodeJwt(jwt);
+            if(!jwt.scopes) return;
+            if(!this.hasScope(jwt.scopes, 'adminTools')) return;
+          }
+
+          this._adminLoaded = true;
+          this.importHref('/elements/snw-admin-bundle.html',function(e){
+          }, function(e){
+            this._adminLoaded = false;
+          });
+        }
+      });
+    })();
+  </script>
+</dom-module>

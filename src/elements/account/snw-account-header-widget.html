@@ -4,13 +4,11 @@
 <link rel="import" href="snw-logout.html">
 <link rel="import" href="snw-account-drop.html">
 <link rel="import" href="../helpers/snw-ls.html">
-<link rel="import" href="../helpers/snw-jwt-helper.html">
 <link rel="import" href="../../styles/dark-theme/dark-theme.html">
 
 <dom-module id="snw-account-header-widget">
   <template>
     <style include="dark-theme"></style>
-    <snw-jwt-helper id="jwtHelper"></snw-jwt-helper>
     <snw-ls id="ls" on-ls-change="handleLsChange"></snw-ls>
 
     <paper-button hidden="{{!_isLoggedIn}}" on-tap="toggleDrop">{{_account.userName}}</paper-button>

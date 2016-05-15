@@ -289,7 +289,7 @@ gulp.task('serve:dist', ['build'], function() {
 //Vulcanize
 gulp.task('vulcanize', function () {
   return vulcanizeTask(
-    ['src/elements/snw-forum-app.html']);
+    ['src/elements/*.html']);
 });
 
 gulp.task('vulcanizePolymer', function(){

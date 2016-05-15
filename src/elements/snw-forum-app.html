@@ -11,12 +11,14 @@
 <link rel="import" href="account/snw-account-header-widget.html">
 <link rel="import" href="routing/snw-router.html">
 <link rel="import" href="../styles/dark-theme/dark-theme.html">
+<link rel="import" href="admin/snw-admin-loader.html">
 
 <dom-module id="snw-forum-app">
   <template>
     <style include="iron-flex iron-positioning iron-flex-alignment dark-theme"></style>
 
     <snw-router page="{{page}}"></snw-router>
+    <snw-admin-loader></snw-admin-loader>
 
     <div id="mainContainer" class="fullbleed">
       <paper-header-panel>

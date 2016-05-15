@@ -1,0 +1,32 @@
+<script>
+  window.SNW = window.SNW || {};
+
+  SNW.PermissionBehavior = {
+    /**
+     * Check if there is a needed scope
+     * @param {Array} scopes Array of scopes to check
+     * @param {String} scope Scope to try to find
+     * @returns {boolean}
+     */
+    hasScope: function(scopes, scope){
+      for(var i = 0; i < scopes.length; i++){
+        if(scopes[i] === scope){
+          console.log(scope + ' true');
+          return true;
+        }
+      }
+      console.log(scope + ' false');
+      return false;
+    },
+
+    /**
+     * Check if user is same as given id
+     * @param {String} id
+     * @param {Object} user
+     * @returns {boolean}
+     */
+    isSelf: function(id, user){
+      return id === user.profileShortId;
+    }
+  }
+</script>

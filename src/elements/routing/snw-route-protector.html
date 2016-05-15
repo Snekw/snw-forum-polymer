@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/carbon-route/carbon-route-converter.html">
 <link rel="import" href="../helpers/snw-ls.html">
 <link rel="import" href="../../styles/dark-theme/dark-theme.html">
+<link rel="import" href="../helpers/snw-permission-behavior.html">
 
 <!--
   THIS IS NOT A REAL SECURITY SYSTEM!
@@ -27,6 +28,8 @@
       'use strict';
       Polymer({
         is: 'snw-route-protector',
+
+        behaviors: [SNW.PermissionBehavior],
 
         properties:{
           route:{
@@ -71,10 +74,8 @@
         },
 
         _checkDefaultScopes: function(scopes, allowSelf){
-          for( var i = 0; i < scopes.length; i++ ){
-            if(scopes[i] === 'z'){
-              return true;
-            }
+          if(this.hasScope(scopes, 'z')){
+            return true;
           }
 
           if(allowSelf){
@@ -89,17 +90,15 @@
 
           if(!this._data.id) return false;
 
-          return this._data.id === this.$.ls.getLs('account').profileShortId;
+          return this.isSelf(this._data.id, this.$.ls.getLs('account'));
         },
 
         _checkScopes: function(compare){
           if(this._checkDefaultScopes(compare.scopes, compare.allowSelf)) return true;
 
-          for( var i = 0; i < compare.neededScopes.length; i++ ){
-            for(var d = 0; d < compare.neededScopes[i].length; d++){
-              if(compare.scopes.indexOf(compare.neededScopes[i][d]) > -1){
-                return true;
-              }
+          for(var i = 0; i < compare.scopes.length; i++){
+            if(this.hasScope(compare.neededScopes, compare.scope[i])){
+              return true;
             }
           }
 

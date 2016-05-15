@@ -1,10 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
-<link rel="import" href="snw-jwt-helper.html">
-
 <dom-module id="snw-ls">
   <template>
-    <snw-jwt-helper id="jwt"></snw-jwt-helper>
     <iron-localstorage id="lsjwt"
                        name="jwt-storage"
                        value="{{jwt}}"
