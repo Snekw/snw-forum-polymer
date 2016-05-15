@@ -41,7 +41,7 @@
             on-iron-form-error="handleFormError">
         <paper-input name="email"
                      label="Email"
-                     auto-validate
+                     on-change="pwValidate"
                      required
                      pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                      error-message="A valid email is required!"
@@ -50,7 +50,7 @@
         <paper-input name="pw"
                      label="Password"
                      type="password"
-                     auto-validate
+                     on-change="pwValidate"
                      required
                      minlength="6"
                      maxlength="255"
@@ -96,7 +96,7 @@
                      pattern="^[a-zA-Z0-9_-]{4,40}$"
                      minlength="4"
                      maxlength="40"
-                     error-message="Username is required! Length 4 - 40 Characters. a-zA-Z0-9_-"
+                     error-message="Required! Length 4 - 40 Characters. a-zA-Z0-9_-"
         ></paper-input>
 
         <paper-input name="email"
@@ -111,7 +111,7 @@
         <paper-input name="pw"
                      label="Password"
                      type="password"
-                     auto-validate
+                     on-change="pwValidate"
                      required
                      minlength="6"
                      value="{{sPw}}"
@@ -119,7 +119,7 @@
         ></paper-input>
         <paper-input label="Password again"
                      type="password"
-                     auto-validate
+                     on-change="pwValidate"
                      pattern="{{sPw}}"
                      required
                      minlength="6"
@@ -284,9 +284,9 @@
         },
         
         handleFormError: function(e){
-          var response = e.detail.response;
-          this._formErrorMessage = response.data.reason.reason;
-          this._formError = true;
+          var response = e.detail.request.xhr.response;
+          this.set('_fromErrorMessage',response.data.reason.f);
+          this.set('_formError', true);
         },
 
         welcomeDialogClose: function(){
@@ -294,6 +294,10 @@
           setTimeout(function(){
             l.close();
           }, 3000);
+        },
+
+        pwValidate: function(e){
+          e.target.validate();
         }
       });
     })();

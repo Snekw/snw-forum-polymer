@@ -27,7 +27,7 @@
         ready: function(){
           var extractedScopes = this.$.jwt.decodeJwt(this.$.ls.getLs('jwt'));
           if(!extractedScopes){
-            extractedScopes = [[]];
+            extractedScopes = [];
           }else{
             extractedScopes = extractedScopes.scopes;
           }

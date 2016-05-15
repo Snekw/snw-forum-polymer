@@ -14,13 +14,13 @@
     <snw-ls id="ls" on-ls-change="handleLsChange"></snw-ls>
 
     <paper-button hidden="{{!_isLoggedIn}}" on-tap="toggleDrop">{{_account.userName}}</paper-button>
-    <snw-account-drop id="drop"></snw-account-drop>
-    <snw-logout on-logout="handleLogout">
-      <paper-button hidden="{{!_isLoggedIn}}">Logout</paper-button>
+    <snw-account-drop id="drop" on-do-logout="doLogout"></snw-account-drop>
+    <snw-logout id="logout" on-logout="handleLogout">
+      <paper-button class="hideIfSmall" hidden="{{!_isLoggedIn}}">Logout</paper-button>
     </snw-logout>
     <snw-login on-login="handleLogin">
       <paper-button data-dialog="login" hidden="{{_isLoggedIn}}">Login</paper-button>
-      <paper-button data-dialog="register" hidden="{{_isLoggedIn}}">Register</paper-button>
+      <paper-button data-dialog="register" hidden="{{_isLoggedIn}}" class="hideIfSmall">Register</paper-button>
     </snw-login>
   </template>
 
@@ -64,6 +64,10 @@
         
         toggleDrop: function(e){
           this.$.drop.toggle();
+        },
+
+        doLogout: function(){
+          this.$.logout.logout();
         }
       });
     })();

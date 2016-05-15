@@ -39,11 +39,12 @@
                   exit-animation="snw-account-drop-exit-animation"
                   on-iron-overlay-closed="setClosed"
     >
-      <paper-listbox style="height: 192px">
+      <paper-listbox>
         <paper-item on-tap="settings">Settings</paper-item>
         <paper-item on-tap="profile">Profile</paper-item>
         <paper-item on-tap="friends">Friends</paper-item>
         <paper-item on-tap="inbox">Inbox</paper-item>
+        <paper-item on-tap="logout" class="hideIfNotSmall">Logout</paper-item>
       </paper-listbox>
     </paper-dialog>
   </template>
@@ -92,6 +93,10 @@
           var user = this.$.ls.getLs('account');
           window.location='/#/user/' + user.profileShortId + '/' + where;
           this.$.adrop.close();
+        },
+        
+        logout: function(){
+          this.fire('do-logout');
         }
       });
     })();

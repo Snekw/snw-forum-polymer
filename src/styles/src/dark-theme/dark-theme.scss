@@ -23,3 +23,15 @@
 .error {
   color: var(--snw-error-color);
 }
+
+@media screen and (max-width: 480px) {
+  .hideIfSmall {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 480px){
+  .hideIfNotSmall {
+    display: none;
+  }
+}

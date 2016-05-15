@@ -9,14 +9,18 @@
 
   //Text
   --snw-text-color: #ffffff;
-  --snw-text-secondary-color: #f4f4f4;
+  --snw-text-secondary-color: #888;
   --snw-font-main: 'Open Sans', sans-serif;
   --snw-font-secondary: 'Roboto', sans-serif;
   --snw-font-size-main: 12px;
   --snw-font-size-big: 16px;
+  --snw-link-color: #ffffff;
 
   //Paper
   --paper-input-container-invalid-color: var(--snw-accent-color);
+  --paper-input-container-color: var(--snw-text-secondary-color);
+  --paper-input-container-focus-color: var(--snw-text-color);
+  --paper-input-container-input-color: var(--snw-text-secondary-color);
   --paper-tabs-selection-bar-color:  var(--snw-accent-color);
   --paper-tab-ink:  var(--snw-accent-color);
 
@@ -29,9 +33,6 @@
   --paper-fab-disabled-background: #4e5151;
   --paper-fab-disabled-text: black;
   --paper-icon-button-disabled-text: #4e5151;
-  --paper-input-container-color: #888;
-  --paper-input-container-focus-color: #ddd;
-  --paper-input-container-input-color: #888;
   --paper-menu-background-color: #2c2f2f;
   --paper-menu-color: #ffffff;
   --paper-menu-disabled-color: #4e5151;
