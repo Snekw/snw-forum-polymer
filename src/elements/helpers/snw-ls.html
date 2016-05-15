@@ -76,15 +76,12 @@
         },
 
         deleteLs: function(type){
-          if(!this[type]) return;
-
-          this[type] = "";
+          this.set(type, null);
+          this.$['ls'+type].save();
         },
 
         setLs: function(type, value){
-          if(!this[type]){
-            this.set(type, value);
-          }
+          this.set(type, value);
         },
 
         getLs: function(type){
