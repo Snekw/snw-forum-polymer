@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="../../bower_components/carbon-route/carbon-route.html">
-<link rel="import" href="../../bower_components/carbon-route/carbon-route-converter.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/app-route/app-route-converter.html">
 <link rel="import" href="../helpers/snw-ls.html">
 <link rel="import" href="../../styles/dark-theme/dark-theme.html">
 <link rel="import" href="../helpers/snw-permission-behavior.html">
@@ -20,7 +20,7 @@
     <style include="dark-theme"></style>
     <snw-ls id="ls"></snw-ls>
     <paper-toast class="error" id="toast" duration="5000"></paper-toast>
-    <carbon-route route="[[route]]" pattern="[[_pattern]]" data="{{_data}}"  tail="{{_tail}}" active="{{_isActive}}"></carbon-route>
+    <app-route route="[[route]]" pattern="[[_pattern]]" data="{{_data}}"  tail="{{_tail}}" active="{{_isActive}}"></app-route>
   </template>
 
   <script>

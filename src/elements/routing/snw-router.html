@@ -1,12 +1,12 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/carbon-route/carbon-location.html">
-<link rel="import" href="../../bower_components/carbon-route/carbon-route.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="snw-protected-routes.html">
 
 <dom-module id="snw-router">
   <template>
-    <carbon-location route="{{_route}}" use-hash-as-path></carbon-location>
-    <carbon-route route="{{_route}}" pattern="/:page" data="{{_page}}" tail="{{_tail}}"></carbon-route>
+    <app-location route="{{_route}}" use-hash-as-path></app-location>
+    <app-route route="{{_route}}" pattern="/:page" data="{{_page}}" tail="{{_tail}}"></app-route>
     <snw-protected-routes route="[[_route]]"></snw-protected-routes>
   </template>
 

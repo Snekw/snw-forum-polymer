@@ -1,18 +1,9 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+<script>
+  window.SNW = window.SNW || {};
 
-<dom-module id="snw-settings">
-  <script>
-    (function(){
-      'use strict';
-      Polymer({
-        is: 'snw-settings',
-        properties:{
-          apiUrl:{
-            type: String,
-            value: 'http://'+window.location.hostname +':443'
-          }
-        }
-      });
-    })();
-  </script>
-</dom-module>
+  SNW.Settings = {
+    settings:{
+      apiUrl: 'http://'+window.location.hostname +':443'
+    }
+  }
+</script>

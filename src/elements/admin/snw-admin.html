@@ -1,0 +1,95 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+<link rel="import" href="../../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../../styles/dark-theme/dark-theme.html">
+<link rel="import" href="snw-admin-dashboard.html">
+<link rel="import" href="snw-admin-permissions.html">
+
+<dom-module id="snw-admin">
+  <style is="custom-style" include="dark-theme iron-flex iron-positioning">
+    :host{
+      --paper-item-selected: {
+        background-color: var(--snw-accent-color);
+        font-weight: inherit;
+      }
+    }
+
+    paper-drawer-panel{
+      height: 88vh;
+    }
+
+    paper-scroll-header-panel{
+      height: 88vh;
+    }
+  </style>
+
+  <template>
+    <paper-drawer-panel>
+      <div class="drawer" drawer>
+        <paper-listbox attr-for-selected="data-page" selected="[[page]]" fallback-selection="home">
+          <paper-item data-page="permissions" on-tap="goto">Permissions</paper-item>
+          <paper-item data-page="test" on-tap="goto">Test</paper-item>
+          <paper-item data-page="test2" on-tap="goto">tes</paper-item>
+          <paper-item data-page="dashboard" on-tap="goto">dashboard</paper-item>
+        </paper-listbox>
+      </div>
+      <div main>
+        <neon-animated-pages
+            attr-for-selected="data-page"
+            selected="[[page]]"
+            entry-animation="fade-in-animation"
+            exit-animation="fade-out-animation"
+            fallback-selection="dashboard">
+          <neon-animatable data-page="dashboard" tabindex="-1">
+            <snw-admin-dashboard></snw-admin-dashboard>
+          </neon-animatable>
+          <neon-animatable data-page="permissions" tabindex="-1">
+            <snw-admin-permissions></snw-admin-permissions>
+          </neon-animatable>
+          <neon-animatable data-page="test2" tabindex="-1">
+            <div>test2</div>
+          </neon-animatable>
+          <neon-animatable data-page="test" tabindex="-1">
+            <div>test</div>
+          </neon-animatable>
+        </neon-animated-pages>
+      </div>
+    </paper-drawer-panel>
+  </template>
+
+  <script>
+    (function(){
+      'use strict';
+      Polymer({
+        is: 'snw-admin',
+
+        properties:{
+          tail: {
+            type: Object,
+            observer: 'tailChanged'
+          }
+        },
+
+        goto: function(e){
+          var page = e.target.getAttribute('data-page') || 'dashboard';
+          this.page = page;
+          window.location = '#/admin/' + page;
+        },
+
+        tailChanged: function(e){
+          //Select the current page on the menu
+          if(e.prefix === '/admin'){
+            var t = /^\/[^/]*/g.exec(this.tail.path);
+            t = t[0].replace('/', '');
+            this.page = t;
+          }
+        }
+      });
+    })();
+  </script>
+</dom-module>

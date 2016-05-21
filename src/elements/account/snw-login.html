@@ -17,7 +17,6 @@
 
   <template>
     <snw-ls id="ls"></snw-ls>
-    <snw-settings id="conf"></snw-settings>
     <content id="inner"></content>
 
     <!-- Login dialog -->
@@ -150,18 +149,16 @@
       Polymer({
         is: 'snw-login',
 
+        behaviors: [
+            SNW.Settings
+        ],
+
         properties: {
           _userName:{
             type: String,
             value: ''
           },
 
-          _conf: {
-            type: Object,
-            value: function(){
-              return document.getElementById('conf');
-            }
-          },
           _validityCheckInProgress: Boolean,
           _rEmailError:{
             type: Boolean,
@@ -180,7 +177,7 @@
         },
 
         _getApiUrl: function(s){
-          return this.$.conf.apiUrl + s;
+          return this.settings.apiUrl + s;
         },
 
         openDialog: function(e){
