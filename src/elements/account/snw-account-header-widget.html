@@ -12,15 +12,15 @@
   <template>
     <style include="dark-theme"></style>
 
-    <paper-button id="admin" on-tap="gotoAdmin" hidden="{{!_isAdmin}}">Admin</paper-button>
-    <paper-button hidden="{{!_isLoggedIn}}" on-tap="toggleDrop">{{_account.userName}}</paper-button>
+    <paper-button id="admin" on-tap="gotoAdmin" hidden$="{{!_isAdmin}}">Admin</paper-button>
+    <paper-button hidden$="{{!_isLoggedIn}}" on-tap="toggleDrop">{{_account.userName}}</paper-button>
     <snw-account-drop id="drop" on-do-logout="doLogout"></snw-account-drop>
     <snw-logout id="logout" on-logout="handleLogout">
-      <paper-button class="hideIfSmall" hidden="{{!_isLoggedIn}}">Logout</paper-button>
+      <paper-button class="hideIfSmall" hidden$="{{!_isLoggedIn}}">Logout</paper-button>
     </snw-logout>
     <snw-login on-login="handleLogin">
-      <paper-button data-dialog="login" hidden="{{_isLoggedIn}}">Login</paper-button>
-      <paper-button data-dialog="register" hidden="{{_isLoggedIn}}" class="hideIfSmall">Register</paper-button>
+      <paper-button data-dialog="login" hidden$="{{_isLoggedIn}}">Login</paper-button>
+      <paper-button data-dialog="register" hidden$="{{_isLoggedIn}}" class="hideIfSmall">Register</paper-button>
     </snw-login>
   </template>
 

@@ -48,6 +48,6 @@
     "test": "gulp test:local",
     "wct": "wct --skip-plugin sauce -p",
     "start": "gulp serve",
-    "polylint": "polylint --root src/bundles --input polylint.html"
+    "polylint": "polylint --root src/elements -i snw-forum-app.html snw-admin-bundle.html"
   }
 }

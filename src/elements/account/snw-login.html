@@ -28,7 +28,7 @@
         </div>
       </div>
 
-      <div class="error" hidden="{{!_formError}}">{{_fromErrorMessage}}</div>
+      <div class="error" hidden$="{{!_formError}}">{{_formErrorMessage}}</div>
 
       <form is="iron-form"
             id="login-form"
@@ -74,9 +74,9 @@
         </div>
       </div>
 
-      <div class="error" hidden="{{!_formError}}">{{_fromErrorMessage}}</div>
-      <div class="error" hidden="{{!_rEmailError}}">Email already used</div>
-      <div class="error" hidden="{{!_rUsernameError}}">Username already used</div>
+      <div class="error" hidden$="{{!_formError}}">{{_formErrorMessage}}</div>
+      <div class="error" hidden$="{{!_rEmailError}}">Email already used</div>
+      <div class="error" hidden$="{{!_rUsernameError}}">Username already used</div>
 
       <form is="iron-form"
             id="register-form"
@@ -87,7 +87,6 @@
 
         <paper-input name="userName"
                      label="Username"
-                     value="{{sUsername}}"
                      on-change="checkValidity"
                      required
                      pattern="^[a-zA-Z0-9_-]{4,40}$"
@@ -167,7 +166,10 @@
           _rUsernameError:{
             type: Boolean,
             value: false
-          }
+          },
+          _formError: Boolean,
+          _formErrorMessage: Boolean,
+          _validity: Object
         },
 
         ready: function(){
@@ -281,7 +283,7 @@
         
         handleFormError: function(e){
           var response = e.detail.request.xhr.response;
-          this.set('_fromErrorMessage',response.data.reason.f);
+          this.set('_formErrorMessage',response.data.reason.f);
           this.set('_formError', true);
         },
 

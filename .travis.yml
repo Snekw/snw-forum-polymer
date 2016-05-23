@@ -13,7 +13,7 @@ addons:
 before_script:
 - npm install -g bower polylint web-component-tester
 - bower install
-- polylint --root src/bundles/ --input polylint.html
+- polylint --root src/elements -i snw-forum-app.html snw-admin-bundle.html
 script:
 - xvfb-run wct
 - if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct -s 'default' --skip-plugin local --plugin sauce;
