@@ -10,7 +10,3 @@ node_modules
 bower_components
 .tmp
 .nogit
-
-src/styles/dark-theme
-src/styles/src/**/*.css
-!src/styles/styling.md
