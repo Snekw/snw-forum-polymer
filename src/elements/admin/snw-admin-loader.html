@@ -1,12 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../helpers/snw-ls.html">
+<link rel="import" href="../helpers/snw-ls-behavior.html">
 <link rel="import" href="../helpers/snw-jwt-behavior.html">
 
 <dom-module id="snw-admin-loader">
-  <template>
-    <snw-ls id="ls" on-ls-change="handleLsChange"></snw-ls>
-  </template>
-
   <script>
     (function(){
       'use strict';
@@ -15,15 +11,36 @@
 
         behaviors: [
           SNW.JwtBehavior,
-          SNW.PermissionBehavior
+          SNW.PermissionBehavior,
+          SNW.LsBehavior
         ],
 
         properties:{
-          _adminLoaded: false
+          _adminLoaded: {
+            type: Boolean,
+            notify: true,
+            value: false
+          }
+        },
+
+        attached: function(){
+          this.listen(this, 'handleLsChange', 'ls-change');
+        },
+
+        detached: function(){
+          this.unlisten(this, 'handleLsChange', 'ls-change');
+        },
+
+        ready: function(){
+          this.importAdmin();
+          if( this.hasScope(this.decodeJwt(this.loadFromLs('jwt')).scopes, 'adminTools')){
+            this.importAdmin();
+          }
         },
 
         handleLsChange: function(e){
-          if(e.detail.type === 'jwt'){
+          console.log(e);
+          if(this.hasScope(this.decodeJwt(this.loadFromLs('jwt')).scopes, 'adminTools')){
             this.importAdmin();
           }
         },
@@ -31,18 +48,12 @@
         importAdmin: function(){
           //We only want to load the bundle once
           if(this._adminLoaded) return;
-          //disabled while I am developing admin board :)
-//          var jwt = this.$.ls.getLs('jwt');
-//          if(jwt.length > 0){
-//            jwt = this.decodeJwt(jwt);
-//            if(!jwt.scopes) return;
-//            if(!this.hasScope(jwt.scopes, 'adminTools')) return;
-//          }
 
-          this._adminLoaded = true;
           this.importHref('/elements/snw-admin-bundle.html',function(e){
+            this.set('_adminLoaded', true);
+            this.fire('admin-loaded');
           }, function(e){
-            this._adminLoaded = false;
+            this.set('_adminLoaded', false);
           });
         }
       });

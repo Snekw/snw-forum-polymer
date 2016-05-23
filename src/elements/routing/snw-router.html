@@ -24,8 +24,7 @@
 
           _page:{
             type: Object,
-            notify: true,
-            observer: '_pageChanged'
+            notify: true
           },
 
           tail:{
@@ -37,19 +36,29 @@
             type: Object,
             notify: true,
             observer: '_tailChanged'
+          },
+
+          _route:{
+            type: Object,
+            notify: true
           }
         },
+
+        observers:[
+          '_pageChanged(_page)',
+          '_tailChanged(_tail)'
+        ],
         
         _pageChanged: function(_page){
           if(!_page.page){
-            this.page = 'home'
+            this.set('page', 'home');
           }else{
-            this.page = _page.page;
+            this.set('page', _page.page);
           }
         },
 
         _tailChanged: function(_tail){
-          this.tail = _tail;
+          this.set('tail', _tail);
         }
       });
     })();

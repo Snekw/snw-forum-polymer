@@ -12,7 +12,6 @@
 <link rel="import" href="routing/snw-router.html">
 <link rel="import" href="../styles/dark-theme/dark-theme.html">
 <link rel="import" href="admin/snw-admin-loader.html">
-<link rel="import" href="helpers/snw-ls.html">
 <link rel="import" href="helpers/snw-permission-behavior.html">
 <link rel="import" href="helpers/snw-jwt-behavior.html">
 
@@ -21,8 +20,7 @@
     <style include="iron-flex iron-positioning iron-flex-alignment dark-theme"></style>
 
     <snw-router page="{{page}}" tail="{{tail}}"></snw-router>
-    <snw-ls id="ls"></snw-ls>
-    <snw-admin-loader></snw-admin-loader>
+    <snw-admin-loader on-admin-loaded="adminLoaded"></snw-admin-loader>
 
     <div id="mainContainer" class="fullbleed">
       <paper-header-panel>
@@ -30,9 +28,6 @@
           <paper-toolbar>
             <div class="title layout horizontal center-justified">Title</div>
             <div class="content">
-              <template is="dom-if" if="{{_isAdmin}}">
-                <snw-admin-header-widget></snw-admin-header-widget>
-              </template>
               <snw-account-header-widget></snw-account-header-widget>
             </div>
           </paper-toolbar>
@@ -93,18 +88,57 @@
 
         behaviors:[
             SNW.JwtBehavior,
-            SNW.PermissionBehavior
+            SNW.PermissionBehavior,
+            Polymer.NeonAnimationRunnerBehavior
         ],
 
+        listeners: {
+          'neon-animation-finish': '_onNeonAnimationFinish'
+        },
+
+        properties:{
+          animationConfig:{
+            value: function(){
+              return {
+                'in':{
+                  name: 'fade-in-animation',
+                  node: this
+                }
+              }
+            }
+          },
+
+          page: {
+            type: Object,
+            notify: true
+          },
+
+          tail: {
+            type: Object,
+            notify: true
+          },
+
+          _isAdmin: {
+            type: Boolean,
+            value: false
+          }
+        },
+
         ready: function(){
-          this._isAdmin = true;
-
-          //Temporarily disabled
-//          this._isAdmin = this.hasScope(this.decodeJwt(this.$.ls.getLs('jwt')).scopes, 'adminTools');
-
           //Remove the splash
+          this.listen(this, '_onNeonAnimationFinish', 'neon-animation-finish');
+          this.style.display = 'block';
+          this.playAnimation('in');
+        },
+
+        _onNeonAnimationFinish: function(){
           var splash = document.getElementById('splash');
           splash.parentNode.removeChild(splash);
+          this.unlisten(this, '_onNeonAnimationFinish', 'neon-animation-finish');
+        },
+
+        adminLoaded: function(e){
+          this.set('_isAdmin', true);
         }
       });
     })();

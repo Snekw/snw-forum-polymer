@@ -3,14 +3,16 @@
 <link rel="import" href="snw-login.html">
 <link rel="import" href="snw-logout.html">
 <link rel="import" href="snw-account-drop.html">
-<link rel="import" href="../helpers/snw-ls.html">
+<link rel="import" href="../helpers/snw-ls-behavior.html">
+<link rel="import" href="../helpers/snw-jwt-behavior.html">
+<link rel="import" href="../helpers/snw-permission-behavior.html">
 <link rel="import" href="../../styles/dark-theme/dark-theme.html">
 
 <dom-module id="snw-account-header-widget">
   <template>
     <style include="dark-theme"></style>
-    <snw-ls id="ls" on-ls-change="handleLsChange"></snw-ls>
 
+    <paper-button id="admin" on-tap="gotoAdmin" hidden="{{!_isAdmin}}">Admin</paper-button>
     <paper-button hidden="{{!_isLoggedIn}}" on-tap="toggleDrop">{{_account.userName}}</paper-button>
     <snw-account-drop id="drop" on-do-logout="doLogout"></snw-account-drop>
     <snw-logout id="logout" on-logout="handleLogout">
@@ -27,6 +29,13 @@
       'use strict';
       Polymer({
         is: 'snw-account-header-widget',
+
+        behaviors:[
+          SNW.LsBehavior,
+          SNW.JwtBehavior,
+          SNW.PermissionBehavior
+        ],
+
         properties:{
           _account: {
             type: Object,
@@ -38,22 +47,30 @@
             type: Boolean,
             notify: true,
             value: false
+          },
+
+          _isAdmin:{
+            type: Boolean,
+            notify: true,
+            value: false
           }
         },
 
         ready: function(){
-          this.set('_account', this.$.ls.getLs('account'));
+          this.set('_account', this.loadFromLs('account'));
+          this._isLoggedIn = this.loadFromLs('jwt');
+          this.checkIsAdmin();
         },
 
-        handleLsChange: function(e){
-          if(e.detail.type === 'jwt'){
-            this._isLoggedIn = (e.detail.e.length > 0);
-          }
+        checkIsAdmin: function(){
+          this._isAdmin = this.hasScope(this.decodeJwt(this.loadFromLs('jwt')).scopes, 'adminTools');
+          this._isAdmin = true;
         },
 
         handleLogin: function(){
-          this.set('_account', this.$.ls.getLs('account'));
+          this.set('_account', this.loadFromLs('account'));
           this._isLoggedIn = true;
+          this.checkIsAdmin();
         },
         
         handleLogout: function(){
@@ -66,6 +83,10 @@
 
         doLogout: function(){
           this.$.logout.logout();
+        },
+
+        gotoAdmin: function(){
+          window.location = '#/admin/dashboard';
         }
       });
     })();

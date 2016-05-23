@@ -45,7 +45,7 @@
       transition: opacity 300ms cubic-bezier(0,0,0.2,1);
       opacity: 0;
       will-change: opacity;
-      z-index: 1;
+      z-index: -1;
       background-color: #212121;
     }
 
@@ -57,6 +57,7 @@
       right: 0;
       height: 112px;
       background-color: #424b4b;
+      z-index: -1;
     }
   </style>
 
@@ -85,8 +86,10 @@
             new CustomEvent('WebComponentsReady', {bubbles: true}));
       }
       //Remove self after loading
-      var loader = document.getElementById('loader');
-      loader.parentNode.removeChild(loader);
+      setTimeout(function(){
+        var loader = document.getElementById('loader');
+        loader.parentNode.removeChild(loader);
+      }, 100);
     };
 
     var webComponentsSupported = (

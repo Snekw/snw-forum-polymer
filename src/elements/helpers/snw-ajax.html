@@ -1,12 +1,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="snw-ls.html">
+<link rel="import" href="snw-ls-behavior.html">
 <link rel="import" href="snw-settings.html">
 
 <dom-module id="snw-ajax">
-  <template>
-    <snw-ls id="ls" on-change="handleLsChange" on-iron-localstorage-load="storageLoaded"></snw-ls>
-    <iron-ajax id="snwajax"
+  <template><iron-ajax id="snwajax"
                handle-as="json"
                headers="{{headers}}"
                url="{{url}}"
@@ -29,7 +27,8 @@
         is: 'snw-ajax',
 
         behaviors:[
-            SNW.Settings
+            SNW.Settings,
+            SNW.LsBehavior
         ],
 
         properties:{
@@ -100,7 +99,7 @@
 
         init: function () {
           //Force localstorage reload before init.
-          this.setAuthHeader(this.$.ls.getLs('jwt') || '');
+          this.setAuthHeader(this.loadFromLs('jwt') || '');
           this.setMethod(this.method || 'POST');
           this.setCmd(this.cmd || '');
           this.setUrl(this.settings.apiUrl + this.cmd);

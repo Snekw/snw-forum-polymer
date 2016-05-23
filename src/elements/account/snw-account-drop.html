@@ -3,7 +3,7 @@
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../animations/snw-account-drop-animations.html">
-<link rel="import" href="../helpers/snw-ls.html">
+<link rel="import" href="../helpers/snw-ls-behavior.html">
 <link rel="import" href="../../styles/dark-theme/dark-theme.html">
 
 <dom-module id="snw-account-drop">
@@ -33,7 +33,6 @@
   </style>
 
   <template>
-    <snw-ls id="ls"></snw-ls>
     <paper-dialog id="adrop"
                   entry-animation="snw-account-drop-entry-animation"
                   exit-animation="snw-account-drop-exit-animation"
@@ -54,6 +53,10 @@
       'use strict';
       Polymer({
         is: 'snw-account-drop',
+
+        behaviors: [
+            SNW.LsBehavior
+        ],
 
         properties:{
           _isOpen: {
@@ -90,7 +93,7 @@
         },
 
         goto: function(where){
-          var user = this.$.ls.getLs('account');
+          var user = this.loadFromLs('account');
           window.location='/#/user/' + user.profileShortId + '/' + where;
           this.$.adrop.close();
         },

@@ -1,12 +1,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="snw-route-protector.html">
 <link rel="import" href="../helpers/snw-jwt-behavior.html">
-<link rel="import" href="../helpers/snw-ls.html">
+<link rel="import" href="../helpers/snw-ls-behavior.html">
 
 <dom-module id="snw-protected-routes">
   <template>
-    <snw-ls id="ls"></snw-ls>
-
     <snw-route-protector id="userEdit" route="[[route]]"></snw-route-protector>
   </template>
 
@@ -17,7 +15,8 @@
         is: 'snw-protected-routes',
 
         behaviors:[
-            SNW.JwtBehavior
+            SNW.JwtBehavior,
+            SNW.LsBehavior
         ],
 
         properties:{
@@ -28,7 +27,7 @@
         },
 
         ready: function(){
-          var extractedScopes = this.decodeJwt(this.$.ls.getLs('jwt'));
+          var extractedScopes = this.decodeJwt(this.loadFromLs('jwt'));
           if(!extractedScopes){
             extractedScopes = [];
           }else{
