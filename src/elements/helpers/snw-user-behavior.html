@@ -1,0 +1,66 @@
+<link rel="import" href="snw-jwt-behavior.html">
+<link rel="import" href="snw-ls-behavior.html">
+
+<script>
+  var UserBehaviorImpl = {
+
+    getAccount: function () {
+      return this.loadLs('account');
+    },
+
+    setAccount: function (account) {
+      if (account === null) {
+        this.deleteLs('account');
+      }
+      if (!account || typeof account !== 'object')
+        return;
+
+      this.saveLs('account', account);
+    },
+
+    getLoginToken: function () {
+      return this.loadLs('loginToken');
+    },
+
+    setLoginToken: function (token) {
+      if (token === null) {
+        this.deleteLs('loginToken');
+      }
+      if (!token || typeof token !== 'string')
+        return;
+
+      this._updatePermissions(token);
+      this.saveLs('loginToken', token);
+    },
+
+    getPermissions: function () {
+      return this.loadLs('permissions');
+    },
+
+    deleteLoginInfo: function () {
+      this.deleteLs('loginToken');
+      this.deleteLs('account');
+      this.deleteLs('permissions');
+    },
+
+    __setPermissions: function (permissions) {
+      if (!permissions || typeof permissions !== 'object')
+        return;
+
+      this.saveLs('permissions', permissions);
+    },
+
+    _updatePermissions: function (token) {
+      if (!token || typeof token !== 'string')
+        return;
+
+      var decoded = this.jwt.decode(token);
+      if (decoded !== null) {
+        this.__setPermissions(decoded.scopes);
+      }
+    }
+  };
+
+  window.SNW       = window.SNW || {};
+  SNW.UserBehavior = [SNW.JwtBehavior, SNW.LsBehavior, UserBehaviorImpl];
+</script>

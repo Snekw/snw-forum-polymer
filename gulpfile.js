@@ -31,17 +31,17 @@ var AUTOPREFIXER_BROWSERS = [
   'android >= 4.4',
   'bb >= 10'
 ];
-var DIST = 'dist';
+var DIST                  = 'dist';
 
 /*
  Helpers
  */
 
-var dist = function ( subPath ) {
+var dist = function (subPath) {
   return !subPath ? DIST : path.join(DIST, subPath);
 };
 
-var styleTask = function ( src ){
+var styleTask = function (src) {
   return gulp.src(src, {base: './'})
     .pipe($.sass())
     .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
@@ -52,14 +52,14 @@ var styleTask = function ( src ){
     }));
 };
 
-var styleModule = function(src, dest){
+var styleModule = function (src, dest) {
   return gulp.src(src)
     .pipe($.processhtml())
     .pipe($.htmlmin({
       collapseWhitespace: true,
-      removeComments: true,
-      sortAttributes: true,
-      sortClassName: true
+      removeComments:     true,
+      sortAttributes:     true,
+      sortClassName:      true
     }))
     .pipe($.replace('<style>', '<style is="custom-style">'))
     .pipe(gulp.dest(dest))
@@ -68,11 +68,11 @@ var styleModule = function(src, dest){
     }))
 };
 
-var imageminTask = function ( src, dest ) {
+var imageminTask = function (src, dest) {
   return gulp.src(src)
     .pipe($.imagemin({
       progressive: true,
-      interlaced: true
+      interlaced:  true
     }))
     .pipe(gulp.dest(dest))
     .pipe($.size({title: 'images'}));
@@ -101,9 +101,9 @@ var minifyHtml = function (src) {
     .pipe($.processhtml())
     .pipe($.htmlmin({
       collapseWhitespace: true,
-      removeComments: true,
-      sortAttributes: true,
-      sortClassName: true
+      removeComments:     true,
+      sortAttributes:     true,
+      sortClassName:      true
     }))
     .pipe(gulp.dest(dist()))
     .pipe($.size({
@@ -111,12 +111,12 @@ var minifyHtml = function (src) {
     }))
 };
 
-var minifyInline = function(src){
+var minifyInline = function (src) {
   return gulp.src(src, {base: 'dist'})
     .pipe($.minifyInline())
     .pipe(gulp.dest(dist()))
     .pipe($.size({
-      title:'minifyInline'
+      title: 'minifyInline'
     }))
 };
 
@@ -124,10 +124,10 @@ var vulcanizeTask = function (src) {
   return gulp.src(src, {base: 'src'})
     .pipe($.vulcanize({
       stripComments: true,
-      inlineCss: true,
+      inlineCss:     true,
       inlineScripts: true,
       stripExcludes: false,
-      excludes: [
+      excludes:      [
         '//fonts.googleapis.com/*',
         '../polymer/',
         '/styles/'
@@ -150,7 +150,7 @@ var crisperTask = function (src) {
     }));
 };
 /*
-  Tasks
+ Tasks
  */
 
 
@@ -168,7 +168,7 @@ gulp.task('build', ['clean'], function (cb) {
 });
 
 //Prefix and clean css
-gulp.task('styles', function(){
+gulp.task('styles', function () {
   return styleTask(['src/styles/src/dark-theme/dark-theme.scss']);
 });
 
@@ -176,7 +176,7 @@ gulp.task('styles:dev', ['styles'], function () {
   return styleModule(['src/styles/src/**/*.html'], 'src/styles')
 });
 
-gulp.task('styles:dist',['styles'], function () {
+gulp.task('styles:dist', ['styles'], function () {
   return styleModule(['src/styles/src/**/*.html'], dist('styles'));
 });
 
@@ -200,13 +200,13 @@ gulp.task('copy', function () {
     'src/index.html',
     'src/manifest.json',
     'src/favicon.ico'
-  ],{
+  ], {
     dot: true
   }).pipe(gulp.dest(dist()));
 
   var bower = gulp.src([
     'src/bower_components/webcomponentsjs/webcomponents-lite.min.js'
-  ], {base:'src'}).pipe(gulp.dest(dist()));
+  ], {base: 'src'}).pipe(gulp.dest(dist()));
 
   return merge(app, bower)
     .pipe($.size({
@@ -215,12 +215,12 @@ gulp.task('copy', function () {
 });
 
 //Search for assets and optimize
-gulp.task('minifyHtml', function() {
+gulp.task('minifyHtml', function () {
   return minifyHtml(
     ['dist/**/*.html']);
 });
 
-gulp.task('minifyInline', function(){
+gulp.task('minifyInline', function () {
   return minifyInline(
     ['dist/**/*.html']);
 });
@@ -232,7 +232,7 @@ gulp.task('uglify', function () {
 });
 
 //Copy fonts
-gulp.task('fonts', function() {
+gulp.task('fonts', function () {
   return gulp.src(['src/fonts/**'])
     .pipe(gulp.dest(dist('fonts')))
     .pipe($.size({
@@ -243,20 +243,20 @@ gulp.task('fonts', function() {
 //Watch the files and reload using browser-sync
 gulp.task('serve', ['styles:dev'], function () {
   browserSync({
-    port: 1337,
-    notify: false,
-    logPrefix: 'SNW',
+    port:           1337,
+    notify:         false,
+    logPrefix:      'SNW',
     snippetOptions: {
       rule: {
         match: '<span id="browser-sync-binding"></span>',
-        fn: function (snippet) {
+        fn:    function (snippet) {
           return snippet;
         }
       }
     },
-    https: false,
-    server:{
-      baseDir: ['src'],
+    https:          false,
+    server:         {
+      baseDir:    ['src'],
       middleWare: [historyApiFallback()]
     }
   });
@@ -268,22 +268,22 @@ gulp.task('serve', ['styles:dev'], function () {
 });
 
 // Build and serve the output from the dist build
-gulp.task('serve:dist', ['build'], function() {
+gulp.task('serve:dist', ['build'], function () {
   browserSync({
-    port: 1338,
-    notify: false,
-    logPrefix: 'SNW',
+    port:           1338,
+    notify:         false,
+    logPrefix:      'SNW',
     snippetOptions: {
       rule: {
         match: '<span id="browser-sync-binding"></span>',
-        fn: function(snippet) {
+        fn:    function (snippet) {
           return snippet;
         }
       }
     },
-    https: true,
-    server: dist(),
-    middleware: [historyApiFallback()]
+    https:          true,
+    server:         dist(),
+    middleware:     [historyApiFallback()]
   });
 });
 
@@ -293,14 +293,14 @@ gulp.task('vulcanize', function () {
     ['src/elements/*.html']);
 });
 
-gulp.task('vulcanizePolymer', function(){
+gulp.task('vulcanizePolymer', function () {
   return gulp.src(['src/bower_components/polymer/polymer.html', 'src/bower_components/polymer/polymer-mini.html', 'src/bower_components/polymer/polymer-micro.html'], {base: 'src'})
     .pipe($.vulcanize({
       stripComments: true,
-      inlineCss: true,
+      inlineCss:     true,
       inlineScripts: true,
       stripExcludes: false,
-      excludes: [
+      excludes:      [
         '//fonts.googleapis.com/*'
       ]
     }))
@@ -311,12 +311,12 @@ gulp.task('vulcanizePolymer', function(){
 });
 
 // Clean output directory
-gulp.task('clean', function() {
+gulp.task('clean', function () {
   return del(['.tmp', dist()]);
 });
 
 // Clean temp directory
-gulp.task('cleanTmp', function() {
+gulp.task('cleanTmp', function () {
   return del(['.tmp']);
 });
 
@@ -325,7 +325,7 @@ gulp.task('crisper', function () {
 });
 
 //Default task
-gulp.task('default',['build']);
+gulp.task('default', ['build']);
 
 //Build and deploy to gh pages !!RUN THIS
 gulp.task('deploy-gh-pages', function (cb) {
@@ -339,9 +339,9 @@ gulp.task('deploy-gh-pages', function (cb) {
 gulp.task('gh-pages', function () {
   return gulp.src(dist('**/*'))
     .pipe($.ghPages({
-      remoteUrl: 'https://'+ process.env.GH_TOKEN +'@github.com/' + process.env.GH_REPO,
-      silent: true,
-      branch: 'gh-pages'
+      remoteUrl: 'https://' + process.env.GH_TOKEN + '@github.com/' + process.env.GH_REPO,
+      silent:    true,
+      branch:    'gh-pages'
     }));
 });
 
@@ -350,6 +350,7 @@ require('web-component-tester').gulp.init(gulp);
 
 //try to load custom tasks
 //Do nothing if we fail
-try{
+try {
   require('require-dir')('tasks');
-}catch (err){}
+} catch (err) {
+}

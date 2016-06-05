@@ -3,16 +3,16 @@
 @import "html";
 
 #mainContainer {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-  color: var(--snw-text-color);
-  background-color: var(--snw-secondary-color);
-  font-family: var(--snw-font-main);
-  font-weight: 400;
-  -ms-text-size-adjust: 100%;
+  margin:                   0;
+  padding:                  0;
+  min-height:               100%;
+  color:                    var(--snw-text-color);
+  background-color:         var(--snw-secondary-color);
+  font-family:              var(--snw-font-main);
+  font-weight:              400;
+  -ms-text-size-adjust:     100%;
   -webkit-text-size-adjust: 100%;
-  font-size: 16px;
+  font-size:                16px;
 }
 
 .fullbleed {
@@ -25,7 +25,7 @@
 }
 
 .drawer {
-  color: var(--snw-text-color);
+  color:            var(--snw-text-color);
   background-color: var(--snw-main-color);
 }
 
@@ -35,7 +35,7 @@
   }
 }
 
-@media screen and (min-width: 480px){
+@media screen and (min-width: 480px) {
   .hideIfNotSmall {
     display: none;
   }

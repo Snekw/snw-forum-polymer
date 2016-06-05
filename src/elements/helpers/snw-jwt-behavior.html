@@ -1,28 +1,29 @@
 <script>
   window.SNW = window.SNW || {};
 
-  SNW.JwtBehavior = {
+  SNW.JwtBehavior     = SNW.JwtBehavior || {};
+  SNW.JwtBehavior.jwt = {
     /**
      * Decode the jwt
      * @param {string} jwt Jwt to decode
      * @return {object} Decoded token or null
      */
-    decodeJwt: function(jwt){
+    decode: function (jwt) {
       var token = jwt;
-      if( token && token != 'undefined' ){
-        try{
+      if (token && token != 'undefined' && typeof token !== 'object') {
+        try {
           var parsed = JSON.parse(window.atob(token.split('.')[1]));
 
-          if( parsed ){
+          if (parsed) {
             return parsed;
-          }else{
+          } else {
             return null;
           }
-        }catch( err ){
+        } catch (err) {
           console.log(err);
           return null;
         }
-      }else{
+      } else {
         return null;
       }
     },
@@ -32,17 +33,17 @@
      * @param {string} jwt Jwt to check
      * @return {boolean} True expired / False not expired
      */
-    hasExpired: function(jwt){
+    hasExpired: function (jwt) {
       var token = this.decodeJwt(jwt);
-      if( !token || !token.exp ){
+      if (!token || !token.exp) {
         return false;
       }
 
       //Expired if token is larger than now
       //*100 to compensate the fact that there is no milliseconds stored on the exp field
-      if( new Date(token.exp * 100) < Date.now() ){
+      if (new Date(token.exp * 100) < Date.now()) {
         return true;
-      }else{
+      } else {
         return false;
       }
     }

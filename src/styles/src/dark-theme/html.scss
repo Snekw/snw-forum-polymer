@@ -1,7 +1,7 @@
 h1, h2, h3, h4, h5, h6 {
   font-weight: 400;
-  margin: 0px;
-  padding: 0px;
+  margin:      0px;
+  padding:     0px;
   line-height: 1em;
 }
 
@@ -11,18 +11,18 @@ h1, h3, h5 {
 
 h1 {
   font-size: 3em;
-  margin: 30px 0px;
+  margin:    30px 0px;
 }
 
 h2 {
-  color: #ffffff;
+  color:     #ffffff;
   font-size: 2em;
-  margin: 20px 0px;
+  margin:    20px 0px;
 }
 
 h3 {
   font-size: 1em;
-  margin: 15px 0px;
+  margin:    15px 0px;
 }
 
 h4 {
@@ -30,19 +30,20 @@ h4 {
 }
 
 a, a:active, a:visited, a:focus {
-  color: var(--snw-link-color);
+  color:           var(--snw-link-color);
   text-decoration: none;
 }
 
 a:hover {
-  color: var(--snw-link-color);
+  color:           var(--snw-link-color);
   text-decoration: underline;
 }
 
 html, body {
-  color: var(--snw-text-color);
+  color:            var(--snw-text-color);
   background-color: var(--snw-secondary-color);
 }
-div{
+
+div {
   color: var(--snw-text-color);
 }

@@ -1,7 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="snw-route-protector.html">
-<link rel="import" href="../helpers/snw-jwt-behavior.html">
-<link rel="import" href="../helpers/snw-ls-behavior.html">
+<link rel="import" href="../helpers/snw-permission-behavior.html">
 
 <dom-module id="snw-protected-routes">
   <template>
@@ -9,37 +8,32 @@
   </template>
 
   <script>
-    (function(){
+    (function () {
       'use strict';
       Polymer({
         is: 'snw-protected-routes',
 
-        behaviors:[
-            SNW.JwtBehavior,
-            SNW.LsBehavior
+        behaviors: [
+          SNW.PermissionBehavior
         ],
 
-        properties:{
-          route:{
-            type: Object,
+        properties: {
+          route: {
+            type:   Object,
             notify: true
           }
         },
 
-        ready: function(){
-          var extractedScopes = this.decodeJwt(this.loadFromLs('jwt'));
-          if(!extractedScopes){
+        ready: function () {
+          var extractedScopes = this.getPermissions();
+          if (!extractedScopes)
             extractedScopes = [];
-          }else{
-            extractedScopes = extractedScopes.scopes;
-          }
-          console.log(extractedScopes);
 
           var userSettings = {
-            scopes: extractedScopes,
-            allowSelf: true,
+            scopes:       extractedScopes,
+            allowSelf:    true,
             neededScopes: ['editUsers'],
-            pattern: '/user/:id/settings'
+            pattern:      '/user/:id/settings'
           };
 
           this.$.userEdit.setData(userSettings);

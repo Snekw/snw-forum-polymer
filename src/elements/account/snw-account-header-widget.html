@@ -3,8 +3,7 @@
 <link rel="import" href="snw-login.html">
 <link rel="import" href="snw-logout.html">
 <link rel="import" href="snw-account-drop.html">
-<link rel="import" href="../helpers/snw-ls-behavior.html">
-<link rel="import" href="../helpers/snw-jwt-behavior.html">
+<link rel="import" href="../helpers/snw-user-behavior.html">
 <link rel="import" href="../helpers/snw-permission-behavior.html">
 <link rel="import" href="../../styles/dark-theme/dark-theme.html">
 
@@ -25,67 +24,70 @@
   </template>
 
   <script>
-    (function(){
+    (function () {
       'use strict';
       Polymer({
         is: 'snw-account-header-widget',
 
-        behaviors:[
-          SNW.LsBehavior,
-          SNW.JwtBehavior,
-          SNW.PermissionBehavior
+        behaviors: [
+          SNW.PermissionBehavior,
+          SNW.UserBehavior
         ],
 
-        properties:{
+        properties: {
           _account: {
-            type: Object,
+            type:   Object,
             notify: true,
-            value: {}
+            value:  {}
           },
 
           _isLoggedIn: {
-            type: Boolean,
+            type:   Boolean,
             notify: true,
-            value: false
+            value:  false
           },
 
-          _isAdmin:{
-            type: Boolean,
+          _isAdmin: {
+            type:   Boolean,
             notify: true,
-            value: false
+            value:  false
           }
         },
 
-        ready: function(){
-          this.set('_account', this.loadFromLs('account'));
-          this._isLoggedIn = this.loadFromLs('jwt');
-          this.checkIsAdmin();
+        ready: function () {
+          this.set('_account', this.getAccount());
+          this._isLoggedIn = false;
+
+          var temp = this.getLoginToken();
+          if (typeof temp === 'string' && temp.length > 3) {
+            this.checkIsAdmin();
+            this._isLoggedIn = true;
+          }
         },
 
-        checkIsAdmin: function(){
-          this._isAdmin = this.hasScope(this.decodeJwt(this.loadFromLs('jwt')).scopes, 'adminTools');
-          this._isAdmin = true;
+        checkIsAdmin: function () {
+          this._isAdmin = this.hasScope('adminTools');
         },
 
-        handleLogin: function(){
-          this.set('_account', this.loadFromLs('account'));
+        handleLogin: function () {
+          this.set('_account', this.getAccount());
           this._isLoggedIn = true;
           this.checkIsAdmin();
         },
-        
-        handleLogout: function(){
+
+        handleLogout: function () {
           this._isLoggedIn = false;
         },
-        
-        toggleDrop: function(e){
+
+        toggleDrop: function (e) {
           this.$.drop.toggle();
         },
 
-        doLogout: function(){
+        doLogout: function () {
           this.$.logout.logout();
         },
 
-        gotoAdmin: function(){
+        gotoAdmin: function () {
           window.location = '#/admin/dashboard';
         }
       });

@@ -19,55 +19,56 @@
   <template>
     <style include="dark-theme"></style>
     <paper-toast class="error" id="toast" duration="5000"></paper-toast>
-    <app-route route="[[route]]" pattern="[[_pattern]]" data="{{_data}}"  tail="{{_tail}}" active="{{_isActive}}"></app-route>
+    <app-route route="[[route]]" pattern="[[_pattern]]" data="{{_data}}" tail="{{_tail}}"
+               active="{{_isActive}}"></app-route>
   </template>
 
   <script>
-    (function(){
+    (function () {
       'use strict';
       Polymer({
         is: 'snw-route-protector',
 
         behaviors: [
           SNW.PermissionBehavior,
-            SNW.LsBehavior
+          SNW.LsBehavior
         ],
 
-        properties:{
-          route:{
-            type: Object,
+        properties: {
+          route:     {
+            type:     Object,
             observer: 'routeChanged'
           },
-          _pattern:{
+          _pattern:  {
             type: Object
           },
-          _data:{
+          _data:     {
             type: Object
           },
-          _tail:{
+          _tail:     {
             type: Object
           },
-          _isActive:{
+          _isActive: {
             type: Boolean
           },
 
-          _protectionData:{
+          _protectionData: {
             type: Object
           }
         },
 
-        setData: function(data){
+        setData: function (data) {
           this.set('_protectionData', data);
           this._pattern = data.pattern;
         },
 
-        routeChanged: function(e){
+        routeChanged: function (e) {
           this._analyzeRoute();
         },
 
-        _analyzeRoute: function(){
-          if(this._isActive){
-            if(!this._checkScopes(this._protectionData)){
+        _analyzeRoute: function () {
+          if (this._isActive) {
+            if (!this._checkScopes(this._protectionData)) {
               this.$.toast.text = 'No permissions to access: ' + window.location.hash + ' Redirected to home page!';
               this.$.toast.open();
               window.location = '/#/home';
@@ -75,31 +76,31 @@
           }
         },
 
-        _checkDefaultScopes: function(scopes, allowSelf){
-          if(this.hasScope(scopes, 'z')){
+        _checkDefaultScopes: function (scopes, allowSelf) {
+          if (this.hasScope(scopes, 'z')) {
             return true;
           }
 
-          if(allowSelf){
+          if (allowSelf) {
             return this._checkIfSelf();
           }
 
           return false;
         },
 
-        _checkIfSelf: function(){
-          if(!this._data) return false;
+        _checkIfSelf: function () {
+          if (!this._data) return false;
 
-          if(!this._data.id) return false;
+          if (!this._data.id) return false;
 
           return this.isSelf(this._data.id, this.loadFromLs('account'));
         },
 
-        _checkScopes: function(compare){
-          if(this._checkDefaultScopes(compare.scopes, compare.allowSelf)) return true;
+        _checkScopes: function (compare) {
+          if (this._checkDefaultScopes(compare.scopes, compare.allowSelf)) return true;
 
-          for(var i = 0; i < compare.scopes.length; i++){
-            if(this.hasScope(compare.neededScopes, compare.scope[i])){
+          for (var i = 0; i < compare.scopes.length; i++) {
+            if (this.hasScope(compare.neededScopes, compare.scope[i])) {
               return true;
             }
           }

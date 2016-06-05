@@ -3,7 +3,7 @@
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../animations/snw-account-drop-animations.html">
-<link rel="import" href="../helpers/snw-ls-behavior.html">
+<link rel="import" href="../helpers/snw-user-behavior.html">
 <link rel="import" href="../../styles/dark-theme/dark-theme.html">
 
 <dom-module id="snw-account-drop">
@@ -12,7 +12,7 @@
       position: fixed;
       right: 10px;
       top: 49px;
-      margin:0;
+      margin: 0;
       width: 200px;
     }
 
@@ -22,12 +22,12 @@
       cursor: pointer;
     }
 
-    paper-item a{
+    paper-item a {
       text-decoration: none;
       color: inherit;
     }
 
-    .iron-selected{
+    .iron-selected {
       font-weight: normal;
     }
   </style>
@@ -55,50 +55,50 @@
         is: 'snw-account-drop',
 
         behaviors: [
-            SNW.LsBehavior
+          SNW.UserBehavior
         ],
 
-        properties:{
+        properties: {
           _isOpen: {
-            type: Boolean,
+            type:  Boolean,
             value: false
           }
         },
 
-        toggle: function(){
-          if(this._isOpen){
+        toggle: function () {
+          if (this._isOpen) {
             this._isOpen = false;
             this.$.adrop.close();
-          }else{
+          } else {
             this._isOpen = true;
             this.$.adrop.open();
           }
         },
 
-        setClosed: function(){
+        setClosed: function () {
           this._isOpen = false;
         },
 
         settings: function () {
           this.goto('settings');
         },
-        profile: function () {
+        profile:  function () {
           this.goto('profile');
         },
-        friends: function () {
+        friends:  function () {
           this.goto('friends');
         },
-        inbox: function () {
+        inbox:    function () {
           this.goto('inbox');
         },
 
-        goto: function(where){
-          var user = this.loadFromLs('account');
-          window.location='/#/user/' + user.profileShortId + '/' + where;
+        goto: function (where) {
+          var user        = this.account;
+          window.location = '/#/user/' + user.profileShortId + '/' + where;
           this.$.adrop.close();
         },
-        
-        logout: function(){
+
+        logout: function () {
           this.fire('do-logout');
         }
       });

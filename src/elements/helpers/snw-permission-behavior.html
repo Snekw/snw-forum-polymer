@@ -1,16 +1,21 @@
-<script>
-  window.SNW = window.SNW || {};
+<link rel="import" href="snw-user-behavior.html">
+<link rel="import" href="snw-ls-behavior.html">
 
-  SNW.PermissionBehavior = {
+<script>
+  var PermissionBehaviorImpl = {
     /**
      * Check if there is a needed scope
-     * @param {Array} scopes Array of scopes to check
      * @param {String} scope Scope to try to find
+     * @param {Array} [scopes] Array of scopes to check. If none try to use UserBehavior permissions
      * @returns {boolean}
      */
-    hasScope: function(scopes, scope){
-      for(var i = 0; i < scopes.length; i++){
-        if(scopes[i] === scope){
+    hasScope: function (scope, scopes) {
+      if (!scopes) {
+        scopes = this.getPermissions();
+      }
+
+      for (var i = 0; i < scopes.length; i++) {
+        if (scopes[i] === scope) {
           console.log(scope + ' true');
           return true;
         }
@@ -23,10 +28,14 @@
      * Check if user is same as given id
      * @param {String} id
      * @param {Object} user
+     * @param {string} user.profileShortId
      * @returns {boolean}
      */
-    isSelf: function(id, user){
+    isSelf: function (id, user) {
       return id === user.profileShortId;
     }
-  }
+  };
+
+  window.SNW             = window.SNW || {};
+  SNW.PermissionBehavior = [SNW.LsBehavior, SNW.UserBehavior, PermissionBehaviorImpl]
 </script>

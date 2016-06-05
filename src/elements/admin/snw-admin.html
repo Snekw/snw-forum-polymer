@@ -14,18 +14,18 @@
 
 <dom-module id="snw-admin">
   <style is="custom-style" include="dark-theme iron-flex iron-positioning">
-    :host{
+    :host {
       --paper-item-selected: {
         background-color: var(--snw-accent-color);
         font-weight: inherit;
       }
     }
 
-    paper-drawer-panel{
+    paper-drawer-panel {
       height: 88vh;
     }
 
-    paper-scroll-header-panel{
+    paper-scroll-header-panel {
       height: 88vh;
     }
   </style>
@@ -42,11 +42,11 @@
       </div>
       <div main>
         <neon-animated-pages
-            attr-for-selected="data-page"
-            selected="[[page]]"
-            entry-animation="fade-in-animation"
-            exit-animation="fade-out-animation"
-            fallback-selection="dashboard">
+          attr-for-selected="data-page"
+          selected="[[page]]"
+          entry-animation="fade-in-animation"
+          exit-animation="fade-out-animation"
+          fallback-selection="dashboard">
           <neon-animatable data-page="dashboard" tabindex="-1">
             <snw-admin-dashboard></snw-admin-dashboard>
           </neon-animatable>
@@ -65,30 +65,30 @@
   </template>
 
   <script>
-    (function(){
+    (function () {
       'use strict';
       Polymer({
         is: 'snw-admin',
 
-        properties:{
+        properties: {
           page: String,
           tail: {
-            type: Object,
+            type:     Object,
             observer: 'tailChanged'
           }
         },
 
-        goto: function(e){
-          var page = e.target.getAttribute('data-page') || 'dashboard';
-          this.page = page;
+        goto: function (e) {
+          var page        = e.target.getAttribute('data-page') || 'dashboard';
+          this.page       = page;
           window.location = '#/admin/' + page;
         },
 
-        tailChanged: function(e){
+        tailChanged: function (e) {
           //Select the current page on the menu
-          if(e.prefix === '/admin'){
-            var t = /^\/[^/]*/g.exec(this.tail.path);
-            t = t[0].replace('/', '');
+          if (e.prefix === '/admin') {
+            var t     = /^\/[^/]*/g.exec(this.tail.path);
+            t         = t[0].replace('/', '');
             this.page = t;
           }
         }

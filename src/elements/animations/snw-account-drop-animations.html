@@ -2,32 +2,32 @@
 <link rel="import" href="../../bower_components/neon-animation/neon-animation-behavior.html">
 
 <dom-module id="snw-account-drop-exit-animation">
-    <template>
-    </template>
+  <template>
+  </template>
 
-    <script>
-        (function () {
-            'use strict';
-            Polymer({
-                is: 'snw-account-drop-exit-animation',
+  <script>
+    (function () {
+      'use strict';
+      Polymer({
+        is: 'snw-account-drop-exit-animation',
 
-                behaviors: [
-                    Polymer.NeonAnimationBehavior
-                ],
+        behaviors: [
+          Polymer.NeonAnimationBehavior
+        ],
 
-                configure: function (config) {
-                    var node = config.node;
+        configure: function (config) {
+          var node = config.node;
 
-                    this.setPrefixedProperty(node, 'transformOrigin', '50% 0');
-                    this._effect = new KeyframeEffect(node, [
-                        {'transform': 'scale(1,1)'},
-                        {'transform': 'scale(1,0)'}
-                    ], this.timingFromConfig(config));
-                    return this._effect;
-                }
-            });
-        })();
-    </script>
+          this.setPrefixedProperty(node, 'transformOrigin', '50% 0');
+          this._effect = new KeyframeEffect(node, [
+            {'transform': 'scale(1,1)'},
+            {'transform': 'scale(1,0)'}
+          ], this.timingFromConfig(config));
+          return this._effect;
+        }
+      });
+    })();
+  </script>
 </dom-module>
 
 <dom-module id="snw-account-drop-entry-animation">

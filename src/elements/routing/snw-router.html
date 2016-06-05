@@ -11,53 +11,53 @@
   </template>
 
   <script>
-    (function(){
+    (function () {
       'use strict';
       Polymer({
         is: 'snw-router',
 
-        properties:{
-          page:{
-            type: String,
+        properties: {
+          page: {
+            type:   String,
             notify: true
           },
 
-          _page:{
-            type: Object,
+          _page: {
+            type:   Object,
             notify: true
           },
 
-          tail:{
-            type: Object,
+          tail: {
+            type:   Object,
             notify: true
           },
 
-          _tail:{
-            type: Object,
-            notify: true,
+          _tail: {
+            type:     Object,
+            notify:   true,
             observer: '_tailChanged'
           },
 
-          _route:{
-            type: Object,
+          _route: {
+            type:   Object,
             notify: true
           }
         },
 
-        observers:[
+        observers: [
           '_pageChanged(_page)',
           '_tailChanged(_tail)'
         ],
-        
-        _pageChanged: function(_page){
-          if(!_page.page){
+
+        _pageChanged: function (_page) {
+          if (!_page.page) {
             this.set('page', 'home');
-          }else{
+          } else {
             this.set('page', _page.page);
           }
         },
 
-        _tailChanged: function(_tail){
+        _tailChanged: function (_tail) {
           this.set('tail', _tail);
         }
       });

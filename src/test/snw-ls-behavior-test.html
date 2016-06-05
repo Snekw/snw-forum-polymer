@@ -16,10 +16,10 @@
 <dom-module id="snw-test">
   <link rel="import" href="../bower_components/polymer/polymer.html">
   <script>
-    addEventListener('WebComponentsReady', function(){
+    addEventListener('WebComponentsReady', function () {
       Polymer({
-        is:'snw-test',
-        behaviors:[
+        is: 'snw-test',
+        behaviors: [
           SNW.LsBehavior
         ]
       })
@@ -35,13 +35,13 @@
 </test-fixture>
 
 <script>
-  suite('snw-ls-behavior', function(){
+  suite('snw-ls-behavior', function () {
     var snw;
-    setup(function(){
+    setup(function () {
       snw = fixture('test-fixture');
     });
 
-    test('should save to ls', function(){
+    test('should save to ls', function () {
       snw.saveToLs('test', {test: true});
       var test = window.localStorage.getItem('test');
       expect(test).to.exist;
@@ -49,7 +49,7 @@
       expect(test.test).to.be.true;
     });
 
-    test('should get value from ls', function(){
+    test('should get value from ls', function () {
       var loaded = snw.loadFromLs('test');
       var test = window.localStorage.getItem('test');
       expect(test).to.exist;
@@ -61,7 +61,7 @@
       expect(test.test).to.be.true;
     });
 
-    test('should delete value from ls', function(){
+    test('should delete value from ls', function () {
       var loaded = snw.loadFromLs('test');
       var test = window.localStorage.getItem('test');
       expect(test).to.exist;
@@ -72,7 +72,7 @@
       expect(test).to.not.exist;
     });
 
-    test('should save to session', function(){
+    test('should save to session', function () {
       snw.saveToLs('test', {test: true}, true);
       var test = window.sessionStorage.getItem('test');
       expect(test).to.exist;
@@ -80,7 +80,7 @@
       expect(test.test).to.be.true;
     });
 
-    test('should get value from session', function(){
+    test('should get value from session', function () {
       var loaded = snw.loadFromLs('test', true);
       var test = window.sessionStorage.getItem('test');
       expect(test).to.exist;
@@ -92,7 +92,7 @@
       expect(test.test).to.be.true;
     });
 
-    test('should delete value from session', function(){
+    test('should delete value from session', function () {
       var loaded = snw.loadFromLs('test', true);
       var test = window.sessionStorage.getItem('test');
       expect(test).to.exist;

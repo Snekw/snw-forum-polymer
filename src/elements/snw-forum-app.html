@@ -46,22 +46,46 @@
                                fallback-selection="404">
             <neon-animatable data-page="home" tabindex="-1">
               <paper-material elevation="1">
-                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend enim in nisl euismod fermentum. Pellentesque volutpat est vel convallis euismod. Vestibulum a odio libero. Nullam dignissim nulla urna, sed semper mauris lacinia sed. Donec malesuada magna a dolor ultrices, id ultrices dolor laoreet. Praesent nec tincidunt lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum venenatis orci id lorem commodo auctor.</div>
+                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend enim in nisl euismod
+                  fermentum. Pellentesque volutpat est vel convallis euismod. Vestibulum a odio libero. Nullam dignissim
+                  nulla urna, sed semper mauris lacinia sed. Donec malesuada magna a dolor ultrices, id ultrices dolor
+                  laoreet. Praesent nec tincidunt lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+                  Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                  Vestibulum venenatis orci id lorem commodo auctor.
+                </div>
               </paper-material>
             </neon-animatable>
             <neon-animatable data-page="about" tabindex="-1">
               <paper-material elevation="1">
-                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend enim in nisl euismod fermentum. Pellentesque volutpat est vel convallis euismod. Vestibulum a odio libero. Nullam dignissim nulla urna, sed semper mauris lacinia sed. Donec malesuada magna a dolor ultrices, id ultrices dolor laoreet. Praesent nec tincidunt lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum venenatis orci id lorem commodo auctor.</div>
+                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend enim in nisl euismod
+                  fermentum. Pellentesque volutpat est vel convallis euismod. Vestibulum a odio libero. Nullam dignissim
+                  nulla urna, sed semper mauris lacinia sed. Donec malesuada magna a dolor ultrices, id ultrices dolor
+                  laoreet. Praesent nec tincidunt lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+                  Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                  Vestibulum venenatis orci id lorem commodo auctor.
+                </div>
               </paper-material>
             </neon-animatable>
             <neon-animatable data-page="forum" tabindex="-1">
               <paper-material elevation="1">
-                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend enim in nisl euismod fermentum. Pellentesque volutpat est vel convallis euismod. Vestibulum a odio libero. Nullam dignissim nulla urna, sed semper mauris lacinia sed. Donec malesuada magna a dolor ultrices, id ultrices dolor laoreet. Praesent nec tincidunt lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum venenatis orci id lorem commodo auctor.</div>
+                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend enim in nisl euismod
+                  fermentum. Pellentesque volutpat est vel convallis euismod. Vestibulum a odio libero. Nullam dignissim
+                  nulla urna, sed semper mauris lacinia sed. Donec malesuada magna a dolor ultrices, id ultrices dolor
+                  laoreet. Praesent nec tincidunt lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+                  Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                  Vestibulum venenatis orci id lorem commodo auctor.
+                </div>
               </paper-material>
             </neon-animatable>
             <neon-animatable data-page="servers" tabindex="-1">
               <paper-material elevation="1">
-                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend enim in nisl euismod fermentum. Pellentesque volutpat est vel convallis euismod. Vestibulum a odio libero. Nullam dignissim nulla urna, sed semper mauris lacinia sed. Donec malesuada magna a dolor ultrices, id ultrices dolor laoreet. Praesent nec tincidunt lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum venenatis orci id lorem commodo auctor.</div>
+                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend enim in nisl euismod
+                  fermentum. Pellentesque volutpat est vel convallis euismod. Vestibulum a odio libero. Nullam dignissim
+                  nulla urna, sed semper mauris lacinia sed. Donec malesuada magna a dolor ultrices, id ultrices dolor
+                  laoreet. Praesent nec tincidunt lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+                  Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                  Vestibulum venenatis orci id lorem commodo auctor.
+                </div>
               </paper-material>
             </neon-animatable>
             <neon-animatable data-page="admin" tabindex="-1">
@@ -79,26 +103,26 @@
   </template>
 
   <script>
-    (function(){
+    (function () {
       'use strict';
       Polymer({
         is: 'snw-forum-app',
 
-        behaviors:[
-            SNW.JwtBehavior,
-            SNW.PermissionBehavior,
-            Polymer.NeonAnimationRunnerBehavior
+        behaviors: [
+          SNW.JwtBehavior,
+          SNW.PermissionBehavior,
+          Polymer.NeonAnimationRunnerBehavior
         ],
 
         listeners: {
           'neon-animation-finish': '_onNeonAnimationFinish'
         },
 
-        properties:{
-          animationConfig:{
-            value: function(){
+        properties: {
+          animationConfig: {
+            value: function () {
               return {
-                'in':{
+                'in': {
                   name: 'fade-in-animation',
                   node: this
                 }
@@ -107,36 +131,36 @@
           },
 
           page: {
-            type: Object,
+            type:   Object,
             notify: true
           },
 
           tail: {
-            type: Object,
+            type:   Object,
             notify: true
           },
 
           _isAdmin: {
-            type: Boolean,
+            type:  Boolean,
             value: false
           }
         },
 
-        ready: function(){
+        ready: function () {
           //Remove the splash
           this.listen(this, '_onNeonAnimationFinish', 'neon-animation-finish');
           this.style.display = 'block';
           this.playAnimation('in');
         },
 
-        _onNeonAnimationFinish: function(){
+        _onNeonAnimationFinish: function () {
           var splash = document.getElementById('splash');
           splash.parentNode.removeChild(splash);
           this.unlisten(this, '_onNeonAnimationFinish', 'neon-animation-finish');
         },
 
-        adminLoaded: function(e){
-          var el = document.createElement('snw-admin');
+        adminLoaded: function (e) {
+          var el  = document.createElement('snw-admin');
           el.tail = this.tail;
           el.classList.add('fit');
           this.$.adminPlaceHolder.appendChild(el);

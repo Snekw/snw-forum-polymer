@@ -1,35 +1,35 @@
 paper-button {
-  color: var(--snw-text-color);
+  color:      var(--snw-text-color);
   background: var(--snw-main-color);
 }
 
 paper-dialog {
   background-color: var(--snw-main-color);
-  color: var(--snw-text-color);
+  color:            var(--snw-text-color);
 }
 
 paper-dialog h1, paper-dialog h2, paper-dialog h3, paper-dialog h4, paper-dialog h5, paper-dialog h6 {
-  overflow: visible;
-  padding: 0 1em;
+  overflow:   visible;
+  padding:    0 1em;
   text-align: center;
 }
 
 paper-tabs {
   background-color: var(--snw-main-color);
-  color: var(--snw-text-color);
+  color:            var(--snw-text-color);
 }
 
 paper-listbox {
   background-color: var(--snw-main-color);
-  color: var(--snw-text-color);
+  color:            var(--snw-text-color);
 
   :hover {
     background-color: var(--snw-accent-color);
   }
 }
 
-paper-drawer-panel{
-  color: var(--snw-text-color);
+paper-drawer-panel {
+  color:            var(--snw-text-color);
   background-color: var(--snw-secondary-color);
 }
 
@@ -38,13 +38,13 @@ paper-card {
 }
 
 .link {
-  @apply(--layout-horizontal);
-  @apply(--layout-center-center);
+  @apply (--layout-horizontal);
+  @apply (--layout-center-center);
 }
 
-@media screen and (max-width: 480px){
-  paper-dialog{
+@media screen and (max-width: 480px) {
+  paper-dialog {
     padding: 0;
-    margin: 0;
+    margin:  0;
   }
 }

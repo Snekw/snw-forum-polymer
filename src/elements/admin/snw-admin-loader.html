@@ -4,7 +4,7 @@
 
 <dom-module id="snw-admin-loader">
   <script>
-    (function(){
+    (function () {
       'use strict';
       Polymer({
         is: 'snw-admin-loader',
@@ -12,47 +12,47 @@
         behaviors: [
           SNW.JwtBehavior,
           SNW.PermissionBehavior,
-          SNW.LsBehavior
+          SNW.UserBehavior
         ],
 
-        properties:{
+        properties: {
           _adminLoaded: {
-            type: Boolean,
+            type:   Boolean,
             notify: true,
-            value: false
+            value:  false
           }
         },
 
-        attached: function(){
+        attached: function () {
           this.listen(this, 'handleLsChange', 'ls-change');
         },
 
-        detached: function(){
+        detached: function () {
           this.unlisten(this, 'handleLsChange', 'ls-change');
         },
 
-        ready: function(){
+        ready: function () {
           this.importAdmin();
-          if( this.hasScope(this.decodeJwt(this.loadFromLs('jwt')).scopes, 'adminTools')){
+
+          if (this.hasScope('adminTools')) {
             this.importAdmin();
           }
         },
 
-        handleLsChange: function(e){
-          console.log(e);
-          if(this.hasScope(this.decodeJwt(this.loadFromLs('jwt')).scopes, 'adminTools')){
+        handleLsChange: function (e) {
+          if (this.hasScope('adminTools')) {
             this.importAdmin();
           }
         },
 
-        importAdmin: function(){
+        importAdmin: function () {
           //We only want to load the bundle once
-          if(this._adminLoaded) return;
+          if (this._adminLoaded) return;
 
-          this.importHref('/elements/snw-admin-bundle.html',function(e){
+          this.importHref('/elements/snw-admin-bundle.html', function (e) {
             this.set('_adminLoaded', true);
             this.fire('admin-loaded');
-          }, function(e){
+          }, function (e) {
             this.set('_adminLoaded', false);
           });
         }

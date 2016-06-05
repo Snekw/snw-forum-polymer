@@ -1,10 +1,11 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="snw-ls-behavior.html">
+<link rel="import" href="snw-user-behavior.html">
 <link rel="import" href="snw-settings.html">
 
 <dom-module id="snw-ajax">
-  <template><iron-ajax id="snwajax"
+  <template>
+    <iron-ajax id="snwajax"
                handle-as="json"
                headers="{{headers}}"
                url="{{url}}"
@@ -26,63 +27,63 @@
       Polymer({
         is: 'snw-ajax',
 
-        behaviors:[
-            SNW.Settings,
-            SNW.LsBehavior
+        behaviors: [
+          SNW.Settings,
+          SNW.UserBehavior
         ],
 
-        properties:{
-          cmd:{
-            type: String,
+        properties: {
+          cmd:              {
+            type:   String,
             notify: true,
-            value: ''
+            value:  ''
           },
-          body:{
-            type: Object,
+          body:             {
+            type:   Object,
             notify: true,
-            value: {}
+            value:  {}
           },
-          method:{
-            type: String,
+          method:           {
+            type:   String,
             notify: true
           },
-          headers:{
-            type: Object,
+          headers:          {
+            type:   Object,
             notify: true,
-            value: {}
+            value:  {}
           },
-          auto:{
-            type: Boolean,
+          auto:             {
+            type:   Boolean,
             notify: true,
-            value: false
+            value:  false
           },
           debounceDuration: {
-            type: Number,
+            type:   Number,
             notify: true
           },
-          lastResponse:{
-            type: Object,
+          lastResponse:     {
+            type:     Object,
             readOnly: true,
-            notify: true
+            notify:   true
           },
-          lastError:{
-            type: Object,
+          lastError:        {
+            type:     Object,
             readOnly: true,
-            notify: true
+            notify:   true
           },
-          lastRequest:{
-            type: Object,
+          lastRequest:      {
+            type:     Object,
             readOnly: true,
+            notify:   true
+          },
+          contentType:      {
+            type:   String,
             notify: true
           },
-          contentType:{
-            type: String,
-            notify: true
-          },
-          jwt:{
+          jwt:              {
             type: Object
           },
-          url:{
+          url:              {
             type: String
           }
         },
@@ -91,34 +92,34 @@
           this.init();
         },
 
-        handleLsChange: function(e){
-          if(e.detail.type === 'jwt'){
+        handleLsChange: function (e) {
+          if (e.detail.type === 'jwt') {
             this.jwt = e.detail.e;
           }
         },
 
         init: function () {
           //Force localstorage reload before init.
-          this.setAuthHeader(this.loadFromLs('jwt') || '');
+          this.setAuthHeader(this.getLoginToken() || '');
           this.setMethod(this.method || 'POST');
           this.setCmd(this.cmd || '');
-          this.setUrl(this.settings.apiUrl + this.cmd);
+          this.setUrl(this.conf.apiUrl + this.cmd);
           this.setHeaders(this.headers || {});
           this.setDebounceDuration(this.debounceDuration || 300);
           this.setAuto(this.auto || false);
-          this.setBody(this.body|| {});
+          this.setBody(this.body || {});
           this.setContentType(this.contentType || 'application/json');
         },
 
         setHeaders: function (headers) {
-          if(!headers ||headers == {})
+          if (!headers || headers == {})
             return;
 
-          if(!this.headers)
+          if (!this.headers)
             this.headers = {};
 
           var newHeaders = {};
-          for(var key in headers){
+          for (var key in headers) {
             newHeaders[key] = headers[key];
           }
 
@@ -126,14 +127,14 @@
         },
 
         setBody: function (body) {
-          if(!body ||body == {})
+          if (!body || body == {})
             return;
 
-          if(!this.body)
+          if (!this.body)
             this.body = {};
 
           var newbody = {};
-          for(var key in body){
+          for (var key in body) {
             newbody[key] = body[key];
           }
 

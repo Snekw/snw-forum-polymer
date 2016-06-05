@@ -4,7 +4,7 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../../elements/helpers/snw-ajax.html">
-<link rel="import" href="../../elements/helpers/snw-ls-behavior.html">
+<link rel="import" href="../../elements/helpers/snw-user-behavior.html">
 <link rel="import" href="../../elements/helpers/snw-settings.html">
 <link rel="import" href="../../styles/dark-theme/dark-theme.html">
 
@@ -19,7 +19,8 @@
     <content id="inner"></content>
 
     <!-- Login dialog -->
-    <paper-dialog style="width: 400px;" id="login" with-backdrop="true" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+    <paper-dialog style="width: 400px;" id="login" with-backdrop="true" entry-animation="scale-up-animation"
+                  exit-animation="fade-out-animation">
       <h2>Login</h2>
       <div class="buttons">
         <div>
@@ -65,7 +66,8 @@
     </paper-dialog>
 
     <!-- Register dialog -->
-    <paper-dialog style="width: 400px;" id="register" with-backdrop="true" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+    <paper-dialog style="width: 400px;" id="register" with-backdrop="true" entry-animation="scale-up-animation"
+                  exit-animation="fade-out-animation">
       <h2>Register</h2>
       <div class="buttons">
         <div>
@@ -126,7 +128,8 @@
           <paper-button data-form="register" on-tap="submitForm" autofocus>Submit</paper-button>
         </div>
 
-        <snw-ajax id="validityCheck" cmd="/auth/validate" body="{{_validity}}" on-response="handleValidityCheckResponse"></snw-ajax>
+        <snw-ajax id="validityCheck" cmd="/auth/validate" body="{{_validity}}"
+                  on-response="handleValidityCheckResponse"></snw-ajax>
 
       </form>
 
@@ -135,7 +138,8 @@
       </div>
     </paper-dialog>
 
-    <paper-dialog id="welcome" on-iron-overlay-opened="welcomeDialogClose" with-backdrop="true" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+    <paper-dialog id="welcome" on-iron-overlay-opened="welcomeDialogClose" with-backdrop="true"
+                  entry-animation="scale-up-animation" exit-animation="fade-out-animation">
       <h2>Welcome <span style="text-transform: capitalize">[[_userName]]</span>!</h2>
     </paper-dialog>
 
@@ -148,74 +152,75 @@
         is: 'snw-login',
 
         behaviors: [
-            SNW.Settings,
-            SNW.LsBehavior
+          SNW.Settings,
+          SNW.UserBehavior
         ],
 
         properties: {
-          _userName:{
-            type: String,
+          _userName: {
+            type:  String,
             value: ''
           },
 
           _validityCheckInProgress: Boolean,
-          _rEmailError:{
-            type: Boolean,
+          _rEmailError:             {
+            type:  Boolean,
             value: false
           },
-          _rUsernameError:{
-            type: Boolean,
+          _rUsernameError:          {
+            type:  Boolean,
             value: false
           },
-          _formError: Boolean,
-          _formErrorMessage: Boolean,
-          _validity: Object
+          _formError:               Boolean,
+          _formErrorMessage:        Boolean,
+          _validity:                Object
         },
 
-        ready: function(){
+        ready: function () {
           var distributed = this.getContentChildren('#inner');
           this.listen(distributed[0], 'tap', 'openDialog');
           this.listen(distributed[1], 'tap', 'openDialog');
         },
 
-        _getApiUrl: function(s){
-          return this.settings.apiUrl + s;
+        _getApiUrl: function (s) {
+          return this.conf.apiUrl + s;
         },
 
-        openDialog: function(e){
+        openDialog: function (e) {
           this.getDialogFromEvent(e).open();
         },
 
-        closeDialog: function(e){
+        closeDialog: function (e) {
           var dial = this.getDialogFromEvent(e);
           dial.close();
-          if(e.target.hasAttribute('data-next')){
+          if (e.target.hasAttribute('data-next')) {
             var next = e.target.getAttribute('data-next');
             this.getDialogFromId(next).open();
           }
         },
 
-        getDialogFromEvent: function(e){
-          if(!e.target.hasAttribute('data-dialog')){
+        getDialogFromEvent: function (e) {
+          if (!e.target.hasAttribute('data-dialog')) {
             return;
           }
-          return this.$$('#'+ e.target.getAttribute('data-dialog'));
+          return this.$$('#' + e.target.getAttribute('data-dialog'));
         },
 
-        getDialogFromId: function(id){
+        getDialogFromId: function (id) {
           return this.$$('#' + id);
         },
 
         submitForm: function (e) {
           //Prevent the form from being submitted if user is already logged in.
-          if(this.loadFromLs('jwt').length > 3){
+          if (this.getLoginToken().length > 3) {
             return;
           }
 
           this._formError = false;
+
           var id = e.target;
-          id = id.getAttribute('data-form');
-          this.$$('#'+id+'-form').submit();
+          id     = id.getAttribute('data-form');
+          this.$$('#' + id + '-form').submit();
         },
 
         checkValidity: function (e) {
@@ -223,9 +228,9 @@
             type: e.target.getAttribute('name'),
             data: e.target.value
           };
-          if(e.target.validate() && !this._validityCheckInProgress){
+          if (e.target.validate() && !this._validityCheckInProgress) {
             //Reset the error flag for the type we are cheking the validity
-            switch(this._validity.type){
+            switch (this._validity.type) {
               case 'email':
                 this._rEmailError = false;
                 break;
@@ -245,12 +250,12 @@
         handleValidityCheckResponse: function (e) {
           this._validityCheckInProgress = false;
 
-          if(e.detail.detail){
-            var isValid = e.detail.detail.response.data.isValid;
+          if (e.detail.detail) {
+            var isValid                    = e.detail.detail.response.data.isValid;
             this._validity.element.invalid = !isValid;
 
-            if(!isValid){
-              switch(e.detail.detail.response.data.type){
+            if (!isValid) {
+              switch (e.detail.detail.response.data.type) {
                 case 'email':
                   this._rEmailError = true;
                   break;
@@ -258,21 +263,21 @@
                   this._rUsernameError = true;
                   break;
                 default:
-                  this._rEmailError = false;
+                  this._rEmailError    = false;
                   this._rUsernameError = false;
               }
             }
           }
         },
-        
-        handleFormResponse: function(e){
+
+        handleFormResponse: function (e) {
           var response = e.detail.response;
-          this.saveToLs('account', response.data.user);
-          this.saveToLs('jwt', response.data.jwt);
+          this.setAccount(response.data.user);
+          this.setLoginToken(response.data.jwt);
           this._userName = response.data.user.userName;
 
           var t = this;
-          setTimeout(function(){
+          setTimeout(function () {
             //Small delay is needed so we get correct values elsewhere on the app
             t.fire('login');
           }, 100);
@@ -280,21 +285,21 @@
           this.$.register.close();
           this.$.login.close();
         },
-        
-        handleFormError: function(e){
+
+        handleFormError: function (e) {
           var response = e.detail.request.xhr.response;
-          this.set('_formErrorMessage',response.data.reason.f);
+          this.set('_formErrorMessage', response.data.reason.f);
           this.set('_formError', true);
         },
 
-        welcomeDialogClose: function(){
+        welcomeDialogClose: function () {
           var l = this.$.welcome;
-          setTimeout(function(){
+          setTimeout(function () {
             l.close();
           }, 3000);
         },
 
-        pwValidate: function(e){
+        pwValidate: function (e) {
           e.target.validate();
         }
       });

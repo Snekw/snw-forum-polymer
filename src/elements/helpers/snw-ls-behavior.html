@@ -1,15 +1,9 @@
 <link rel="import" href="../../bower_components/app-storage/app-storage-behavior.html">
 
 <script>
-  window.SNW = window.SNW || {};
-
-  SNW.LsBehavior = {
-    behaviors: [
-        Polymer.AppStorageBehavior
-    ],
-
-    saveToLs: function(key, value, isSession){
-      if(!key || !value) return;
+  var LsBehaviorImpl = {
+    saveLs: function (key, value, isSession) {
+      if (!key || !value) return;
 
       var storage = this.__computeStorage(isSession || false);
       storage.setItem(key, JSON.stringify(value || {}));
@@ -17,26 +11,32 @@
       this.fire('ls-change', value);
     },
 
-    loadFromLs: function(key, isSession){
-      if(!key) return;
+    loadLs: function (key, isSession) {
+      if (!key) return;
 
       var storage = this.__computeStorage(isSession || false);
       try {
-        return JSON.parse(storage.getItem(key));
-      } catch(e) {
+        var temp = JSON.parse(storage.getItem(key));
+        if (temp)
+          return temp;
+        else
+          return {};
+      } catch (e) {
         console.error('Failed to parse value from storage for', this.key);
       }
     },
 
-    deleteFromLs: function(key, isSession){
-      if(!key) return;
+    deleteLs: function (key, isSession) {
+      if (!key) return;
 
       var storage = this.__computeStorage(isSession || false);
       storage.removeItem(key);
     },
 
-    __computeStorage: function(sessionOnly) {
+    __computeStorage: function (sessionOnly) {
       return sessionOnly ? window.sessionStorage : window.localStorage;
     }
-  }
+  };
+  window.SNW         = window.SNW || {};
+  SNW.LsBehavior     = [Polymer.AppStorageBehavior, LsBehaviorImpl];
 </script>

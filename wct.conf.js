@@ -1,17 +1,17 @@
 /**
  * Created by Ilkka on 18.4.2016.
  */
-var browsers = require('./sauce.browsers');
+var browsers   = require('./sauce.browsers');
 module.exports = {
-  suites:[
+  suites : [
     'src/test'
   ],
-  plugins:{
-    local:{
+  plugins: {
+    local: {
       disabled: false,
       browsers: ['firefox']
     },
-    sauce:{
+    sauce: {
       disabled: true,
       browsers: browsers
     }
