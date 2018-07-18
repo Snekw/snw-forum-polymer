@@ -1,11 +1,11 @@
-#Snw-Forum-Polymer
+## Snw-Forum-Polymer
 
-[![Build Status](https://travis-ci.org/Snekw/snw-forum-polymer.svg?branch=master)](https://travis-ci.org/Snekw/snw-forum-polymer)
+# Not maintained or used anymore
 
 Frontend for snw-forum-api
 
 
-## Installation for developing
+### Installation for developing
 
 Run `npm install`.
 Run `bower install`.
